@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cursed Gear — Build Planner</title>
+<title>CG Builder</title>
+<link rel="icon" type="image/png" href="cursedcog.png">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -56,21 +57,32 @@
 
 <div class="app">
 
-  <!-- Ad Banner Top -->
-  <div class="ad-slot ad-banner" id="adBanner">
-    <span class="ad-placeholder">AD SPACE — 728x90</span>
-  </div>
-
   <header>
     <div class="logo">
-      <div class="logo-title">Cursed Gear</div>
-      <div class="logo-sub">Builder &nbsp;·&nbsp; v1.0</div>
+      <div class="logo-title-row">
+        <img src="cursedcog.png" class="logo-icon" alt="">
+        <div class="logo-title">Cursed Gear Builder</div>
+      </div>
+      <div class="logo-sub">Version &nbsp;·&nbsp; 1.0</div>
     </div>
     <div class="logo-disclaimer">Cursed Gear Builder is still in development, and the devs have not revealed the math for attributes and scaling. Not all information may be 100% accurate as of right now.</div>
-    <div class="header-actions">
-      <button class="btn" onclick="resetBuild()">↺ Reset</button>
-      <button class="btn" onclick="exportBuild()">⬡ Export Code</button>
-      <button class="btn btn-primary" onclick="shareBuild()">⬆ Share</button>
+    <div class="header-right">
+      <div class="header-links">
+        <a class="header-link kofi" href="https://ko-fi.com/bonzonini" target="_blank" rel="noopener" title="support me by buying me a pint of beer on Ko-fi">
+          <span class="header-link-icon">♥</span><span class="header-link-label">Ko-fi</span>
+        </a>
+        <a class="header-link discord" href="https://discord.gg/YEHXknPZWc" target="_blank" rel="noopener" title="Cursed Gear Info / Builder Discord">
+          <span class="header-link-icon">◈</span><span class="header-link-label">Discord</span>
+        </a>
+        <a class="header-link roblox" href="https://www.roblox.com/games/10154506972/Cursed-Gear" target="_blank" rel="noopener" title="Play Cursed Gear">
+          <span class="header-link-icon">▶</span><span class="header-link-label">Play</span>
+        </a>
+      </div>
+      <div class="header-actions">
+        <button class="btn" onclick="resetBuild()">↺ Reset</button>
+        <button class="btn" onclick="exportBuild()">⬡ Export Code</button>
+        <button class="btn btn-primary" onclick="shareBuild()">⬆ Share</button>
+      </div>
     </div>
   </header>
 
@@ -153,6 +165,7 @@
               <div class="field-label"><span>04</span> Player Grade</div>
               <select id="gradeSelect" onchange="updateGrade()">
                 <option value="">— Select Grade —</option>
+                <option value="Ungraded">Ungraded</option>
                 <option value="Grade 4">Grade 4</option>
                 <option value="Grade 3">Grade 3</option>
                 <option value="Semi-Grade 2">Semi-Grade 2</option>
@@ -181,7 +194,9 @@
       <div class="panel" style="margin-bottom:16px">
         <div class="panel-header">
           <span class="panel-title">Attributes</span>
-          <span class="panel-badge" id="gradeLabel">LVL 0</span>
+          <div style="display:flex;gap:6px;align-items:center">             
+            <span class="panel-badge" id="gradeLabel">LVL 0</span>
+          </div>
         </div>
         <div class="panel-body">
           <!-- Radar Chart -->
@@ -195,19 +210,12 @@
           <span class="budget-label">Player Level</span>
           <span class="budget-count" id="budgetCount">0 / 150</span>
         </div>
+        <div class="budget-bar" style="border-top:none;padding-top:0">
+          <span class="budget-label">Stat Packs</span>
+          <span class="budget-count" id="packCount">0 / 6</span>
+        </div>
       </div>
 
-      <!-- Stat Packs -->
-      <div class="panel" style="margin-bottom:16px">
-        <div class="panel-header">
-          <span class="panel-title">Stat Packs</span>
-          <span class="panel-badge" id="packCount">6 / 6</span>
-        </div>
-        <div class="panel-body">
-          <div class="pack-desc">Every 25 levels you receive a stat pack. Dump 25 points into any attribute.</div>
-          <div class="pack-list" id="packList"></div>
-        </div>
-      </div>
 
 
       <!-- Equipped Cybernetics Panel -->
@@ -246,8 +254,8 @@
       <div class="tabs">
         <div class="tab active" onclick="switchTab('techniques',this)">Techniques</div>
         <div class="tab" onclick="switchTab('cybernetics',this)">Cybernetics</div>
-        <div class="tab" onclick="switchTab('summary',this)">Summary</div>
         <div class="tab" onclick="switchTab('gears',this)">Gear</div>
+        <div class="tab" onclick="switchTab('summary',this)">Summary</div>
       </div>
 
       <div id="tab-gears" class="tab-content">
@@ -279,10 +287,6 @@
       <div id="tab-summary" class="tab-content">
         <div class="summary-grid" id="summaryGrid"></div>
       </div>
-    <!-- Ad Sidebar -->
-    <div class="ad-slot ad-sidebar" id="adSidebar">
-      <span class="ad-placeholder">AD SPACE<br>300x250</span>
-    </div>
     </div>
   </div>
 </div>

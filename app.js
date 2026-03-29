@@ -105,82 +105,81 @@ const CLAN_DATA = {
 
 const TIER_COLORS = { royal:'#ffd700', unique:'#b060e0', rare:'#4a9eff', common:'#aaaacc' };
 
-// All real in-game techniques with roll chances
+// All real in-game techniques with roll chances and EVO counts (from Trello)
 const TECHNIQUES = [
   // Royal - 0.11%
-  { name:'Phantom Tears',      tier:'royal',  roll:0.11 },
-  { name:'Just A Nibble',      tier:'royal',  roll:0.11 },
-  { name:'Spin',               tier:'royal',  roll:0.11 },
-  { name:'Shivas Hands',       tier:'royal',  roll:0.11 },
-  { name:'Ice',                tier:'royal',  roll:0.11 },
-  { name:'Grief Wardens',      tier:'royal',  roll:0.11 },
-  { name:'Divine Cultivation',  tier:'royal',  roll:0.11 },
-  { name:'The Hunter',         tier:'royal',  roll:0.11 },
-  { name:'Portals',            tier:'royal',  roll:0.11 },
-  { name:'Sword Saint',        tier:'royal',  roll:0.11 },
-  { name:'Reversal Fortune',   tier:'royal',  roll:0.11 },
-  { name:'Sadako',             tier:'royal',  roll:0.11 },
-  { name:'Luck Manipulation',  tier:'royal',  roll:0.11 },
-  { name:'Gravity',            tier:'royal',  roll:0.11 },
-  { name:'Maw Of Gluttony',    tier:'royal',  roll:0.11 },
-  { name:'The Playbook',       tier:'royal',  roll:0.11 },
-  { name:'Betsy',              tier:'royal',  roll:0.11 },
-  { name:'Vector Arrows',      tier:'royal',  roll:0.11 },
-  { name:'Curse Butler',       tier:'royal',  roll:0.11 },
+  { name:'Phantom Tears',      tier:'royal',  roll:0.11, evo:1 },
+  { name:'Just A Nibble',      tier:'royal',  roll:0.11, evo:0 },
+  { name:'Spin',               tier:'royal',  roll:0.11, evo:1 },
+  { name:'Shivas Hands',       tier:'royal',  roll:0.11, evo:1 },
+  { name:'Ice',                tier:'royal',  roll:0.11, evo:3 },
+  { name:'Grief Wardens',      tier:'royal',  roll:0.11, evo:2 },
+  { name:'Divine Cultivation', tier:'royal',  roll:0.11, evo:0 },
+  { name:'The Hunter',         tier:'royal',  roll:0.11, evo:0 },
+  { name:'Portals',            tier:'royal',  roll:0.11, evo:0 },
+  { name:'Sword Saint',        tier:'royal',  roll:0.11, evo:1 },
+  { name:'Reversal Fortune',   tier:'royal',  roll:0.11, evo:0 },
+  { name:'Sadako',             tier:'royal',  roll:0.11, evo:0 },
+  { name:'Luck Manipulation',  tier:'royal',  roll:0.11, evo:0 },
+  { name:'Gravity',            tier:'royal',  roll:0.11, evo:0 },
+  { name:'Maw Of Gluttony',    tier:'royal',  roll:0.11, evo:1 },
+  { name:'The Playbook',       tier:'royal',  roll:0.11, evo:0 },
+  { name:'Betsy',              tier:'royal',  roll:0.11, evo:2 },
+  { name:'Vector Arrows',      tier:'royal',  roll:0.11, evo:2 },
+  { name:'Curse Butler',       tier:'royal',  roll:0.11, evo:3 },
   // Unique - 0.83%
-  { name:'Damocles',           tier:'unique', roll:0.83 },
-  { name:'Lightseeker',        tier:'unique', roll:0.83 },
-  { name:'Thunder Spears',     tier:'unique', roll:0.83 },
-  { name:'Seraph',             tier:'unique', roll:0.83 },
-  { name:'Curse Storm',        tier:'unique', roll:0.83 },
-  { name:'Basketball',         tier:'unique', roll:0.83 },
-  { name:'Radiation',          tier:'unique', roll:0.83 },
-  { name:'Psychokinesis',      tier:'unique', roll:0.83 },
-  { name:'Zodiacs',            tier:'unique', roll:0.83 },
-  { name:'The Watcher',        tier:'unique', roll:0.83 },
-  { name:'Tremor',             tier:'unique', roll:0.83 },
-  { name:'Spirit Walker',      tier:'unique', roll:0.83 },
+  { name:'Damocles',           tier:'unique', roll:0.83, evo:0 },
+  { name:'Lightseeker',        tier:'unique', roll:0.83, evo:0 },
+  { name:'Thunder Spears',     tier:'unique', roll:0.83, evo:0 },
+  { name:'Seraph',             tier:'unique', roll:0.83, evo:2 },
+  { name:'Curse Storm',        tier:'unique', roll:0.83, evo:1 },
+  { name:'Basketball',         tier:'unique', roll:0.83, evo:0 },
+  { name:'Radiation',          tier:'unique', roll:0.83, evo:1 },
+  { name:'Zodiacs',            tier:'unique', roll:0.83, evo:0 },
+  { name:'The Watcher',        tier:'unique', roll:0.83, evo:1 },
+  { name:'Tremor',             tier:'unique', roll:0.83, evo:3 },
+  { name:'Spirit Walker',      tier:'unique', roll:0.83, evo:1 },
   // Rare - 1.67%
-  { name:'Beelzebub',          tier:'rare',   roll:1.67 },
-  { name:'Fresh Cut',          tier:'rare',   roll:1.67 },
-  { name:'Medium',             tier:'rare',   roll:1.67 },
-  { name:'Vampirism',          tier:'rare',   roll:1.67 },
-  { name:'Energy Control',     tier:'rare',   roll:1.67 },
-  { name:'Geddon',             tier:'rare',   roll:1.67 },
-  { name:'Highlight Reel',     tier:'rare',   roll:1.67 },
-  { name:'Railgun',            tier:'rare',   roll:1.67 },
-  { name:'War Curse',          tier:'rare',   roll:1.67 },
-  { name:'Edgelord',           tier:'rare',   roll:1.67 },
-  { name:'Heavy Rain',         tier:'rare',   roll:1.67 },
-  { name:'Judgement',          tier:'rare',   roll:1.67 },
-  { name:'Pain Packer',        tier:'rare',   roll:1.67 },
+  { name:'Beelzebub',          tier:'rare',   roll:1.67, evo:1 },
+  { name:'Fresh Cut',          tier:'rare',   roll:1.67, evo:0 },
+  { name:'Medium',             tier:'rare',   roll:1.67, evo:0 },
+  { name:'Vampirism',          tier:'rare',   roll:1.67, evo:0 },
+  { name:'Energy Control',     tier:'rare',   roll:1.67, evo:0 },
+  { name:'Geddon',             tier:'rare',   roll:1.67, evo:1 },
+  { name:'Highlight Reel',     tier:'rare',   roll:1.67, evo:0 },
+  { name:'Railgun',            tier:'rare',   roll:1.67, evo:2 },
+  { name:'War Curse',          tier:'rare',   roll:1.67, evo:1 },
+  { name:'Edgelord',           tier:'rare',   roll:1.67, evo:2 },
+  { name:'Heavy Rain',         tier:'rare',   roll:1.67, evo:0 },
+  { name:'Judgement',          tier:'rare',   roll:1.67, evo:1 },
+  { name:'Pain Packer',        tier:'rare',   roll:1.67, evo:0 },
   // Common - 2.42%
-  { name:'Ball Of Doom',       tier:'common', roll:2.42 },
-  { name:'Yang',               tier:'common', roll:2.42 },
-  { name:'Yin',                tier:'common', roll:2.42 },
-  { name:'Sun Breather',       tier:'common', roll:2.42 },
-  { name:'Shadow Realm',       tier:'common', roll:2.42 },
-  { name:'Sea King',           tier:'common', roll:2.42 },
-  { name:'Ink',                tier:'common', roll:2.42 },
-  { name:'Power Of Friendship',tier:'common', roll:2.42 },
-  { name:'Madness Factor',     tier:'common', roll:2.42 },
-  { name:'No Enemies',         tier:'common', roll:2.42 },
-  { name:'Bounce',             tier:'common', roll:2.42 },
-  { name:'Star Link',          tier:'common', roll:2.42 },
-  { name:'Ouji',               tier:'common', roll:2.42 },
-  { name:'Rain God',           tier:'common', roll:2.42 },
-  { name:'The Dealer',         tier:'common', roll:2.42 },
-  { name:'The Shipyard',       tier:'common', roll:2.42 },
-  { name:'Ghostwriter',        tier:'common', roll:2.42 },
-  { name:'Hot Potato',         tier:'common', roll:2.42 },
-  { name:'Chains',             tier:'common', roll:2.42 },
-  { name:'The Meg',            tier:'common', roll:2.42 },
-  { name:'Gilded Shadow',      tier:'common', roll:2.42 },
-  { name:'Path To The Grave',  tier:'common', roll:2.42 },
-  { name:'Moth Flame',         tier:'common', roll:2.42 },
-  { name:'Sky Rulers',         tier:'common', roll:2.42 },
-  { name:'Powerup Box',        tier:'common', roll:2.42 },
-  { name:'Wheres Your Head At',tier:'common', roll:2.42 },
+  { name:'Ball Of Doom',       tier:'common', roll:2.42, evo:0 },
+  { name:'Yang',               tier:'common', roll:2.42, evo:0 },
+  { name:'Yin',                tier:'common', roll:2.42, evo:0 },
+  { name:'Sun Breather',       tier:'common', roll:2.42, evo:0 },
+  { name:'Shadow Realm',       tier:'common', roll:2.42, evo:0 },
+  { name:'Sea King',           tier:'common', roll:2.42, evo:1 },
+  { name:'Ink',                tier:'common', roll:2.42, evo:3 },
+  { name:'Power Of Friendship',tier:'common', roll:2.42, evo:0 },
+  { name:'Madness Factor',     tier:'common', roll:2.42, evo:0 },
+  { name:'No Enemies',         tier:'common', roll:2.42, evo:0 },
+  { name:'Bounce',             tier:'common', roll:2.42, evo:0 },
+  { name:'Star Link',          tier:'common', roll:2.42, evo:0 },
+  { name:'Ouji',               tier:'common', roll:2.42, evo:1 },
+  { name:'Rain God',           tier:'common', roll:2.42, evo:0 },
+  { name:'The Dealer',         tier:'common', roll:2.42, evo:0 },
+  { name:'The Shipyard',       tier:'common', roll:2.42, evo:0 },
+  { name:'Ghostwriter',        tier:'common', roll:2.42, evo:0 },
+  { name:'Hot Potato',         tier:'common', roll:2.42, evo:0 },
+  { name:'Chains',             tier:'common', roll:2.42, evo:1 },
+  { name:'The Meg',            tier:'common', roll:2.42, evo:1 },
+  { name:'Gilded Shadow',      tier:'common', roll:2.42, evo:0 },
+  { name:'Path To The Grave',  tier:'common', roll:2.42, evo:0 },
+  { name:'Moth Flame',         tier:'common', roll:2.42, evo:0 },
+  { name:'Sky Rulers',         tier:'common', roll:2.42, evo:0 },
+  { name:'Powerup Box',        tier:'common', roll:2.42, evo:0 },
+  { name:'Wheres Your Head At',tier:'common', roll:2.42, evo:0 },
 ];
 
 const CYBER_TYPE_COLORS = { Active:'#c8a96e', Passive:'#4a9eff', Toolbar:'#b060e0', Vow:'#e05555' };
@@ -397,22 +396,41 @@ function trelloBtn(url) {
   return `<a class="trello-link" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ TRELLO</a>`;
 }
 
-// CT upgrade cost: level N costs N points (1+2+3+4+5 = 15 to max one stat)
+// CT upgrade stats — each level costs 1 point flat
+// Efficiency / Potency / Haste are the trio group (dynamic colour per investment)
 const CT_STATS = [
-  { key:'potency',    name:'Potency',    css:'potency',    maxLv:5 },
-  { key:'haste',      name:'Haste',      css:'haste',      maxLv:5 },
-  { key:'efficiency', name:'Efficiency', css:'efficiency', maxLv:5 },
-  { key:'evo',        name:'EVO',        css:'evo',        maxLv:1 },
+  { key:'efficiency', name:'Efficiency', group:'trio' },
+  { key:'potency',    name:'Potency',    group:'trio' },
+  { key:'haste',      name:'Haste',      group:'trio' },
 ];
+const CT_STAT_MAX = 10; // each stat caps at 10
 
-function ctLevelCost(lv) { return lv; } // level 1=1pt, 2=2pt, etc.
-function ctTotalCost(lv) { return (lv * (lv + 1)) / 2; }
+// 20 base + up to 5 drives (×4 pts each) = 40 max
+const BASE_CT_POINTS = 20;
+const MAX_DRIVES     = 5;
+const DRIVE_BONUS    = 4;
 
-const MAX_DRIVES = 5;
-const PTS_PER_DRIVE = 5;
+function getCtPointsTotal() {
+  return BASE_CT_POINTS + (state.memoryDrives || 0) * DRIVE_BONUS;
+}
+
+// Colour for trio cards based on individual level (0–10)
+function trioColor(lv) {
+  const stops = [
+    '#2e2820','#38301e','#42381e','#524020','#624e24',
+    '#7a6028','#926e2e','#aa8838','#c0a040','#c8a84a','#e0c060'
+  ];
+  return stops[Math.min(lv, 10)];
+}
+function trioGlow(lv) {
+  if (lv === 0) return 'none';
+  const alphas = [0,0.05,0.07,0.09,0.12,0.15,0.18,0.22,0.26,0.30,0.38];
+  return `0 0 ${4 + lv * 2}px rgba(200,168,74,${alphas[Math.min(lv,10)]})`;
+}
 
 // Player Grades — rank system with stat % buff and cybernetic load cap
 const PLAYER_GRADES = [
+  { name:'Ungraded',        buff:0,  cyberLoad:100 },
   { name:'Grade 4',         buff:5,  cyberLoad:110 },
   { name:'Grade 3',         buff:10, cyberLoad:120 },
   { name:'Semi-Grade 2',    buff:15, cyberLoad:130 },
@@ -435,7 +453,7 @@ let state = {
   packs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
   techFilter: 'all',
   memoryDrives: 0,
-  ctLevels: { potency:0, haste:0, efficiency:0, evo:0 },
+  ctLevels: { efficiency:0, potency:0, haste:0, evo:0 },
   playerGrade: '',
   cybernetics: [],
   cyberFilter: 'all',
@@ -467,10 +485,17 @@ function getStatBuff() {
   return g ? g.buff : 0;
 }
 
+// Base effective stat — attrs + milestone + packs + cybernetics, NO grade buff
+// Used for radar chart and grade letter so the visual doesn't inflate with grade
 function getEffectiveStat(key) {
-  const raw = getStatTotal(key) + getCyberneticStatBonus(key);
+  return getStatTotal(key) + getCyberneticStatBonus(key);
+}
+
+// Grade-buffed stat — shown in brackets next to the base, like the real game
+function getGradedStat(key) {
+  const raw = getEffectiveStat(key);
   const buff = getStatBuff();
-  return buff > 0 ? Math.floor(raw * (1 + buff / 100)) : raw;
+  return buff > 0 ? Math.floor(raw * (1 + buff / 100)) : null;
 }
 
 function getCyberneticLoadCap() {
@@ -566,21 +591,40 @@ function buildRadarChart() {
 function buildAttrList() {
   const container = document.getElementById('attrList');
   container.innerHTML = '';
+  const packsUsed = getPacksUsed();
+  const packsLeft = TOTAL_PACKS - packsUsed;
+
+  // Update pack count displays
+  const packBadge = document.getElementById('packBadge');
+  if (packBadge) packBadge.textContent = packsLeft + ' SP LEFT';
+  const packCount = document.getElementById('packCount');
+  if (packCount) packCount.textContent = packsUsed + ' / ' + TOTAL_PACKS;
+
   ATTRIBUTES.forEach(attr => {
     const total = getEffectiveStat(attr.key);
     const grade = getGrade(total);
     const gc = gradeClass(grade);
     const fillPct = Math.min(total / RADAR_SCALE * 100, 100);
     const base = state.attrs[attr.key] || 0;
-
+    const packPts = (state.packs[attr.key] || 0) * PTS_PER_PACK;
     const softCap = isAboveSoftCap(total);
     const softCapPct = GRADE_THRESHOLDS[SOFT_CAP_INDEX] / RADAR_SCALE * 100;
+    const canAddPack = packsLeft > 0;
+    const canRemovePack = (state.packs[attr.key] || 0) > 0;
+
+    const graded = getGradedStat(attr.key);
+    const gradedGrade = graded !== null ? getGrade(graded) : null;
+    const gradedGc    = gradedGrade ? gradeClass(gradedGrade) : '';
 
     container.innerHTML += `
       <div class="attr-row" title="${attr.desc}">
-        <div>
+        <div class="attr-name-cell">
           <div class="attr-name">${attr.name}${softCap ? ' <span class="soft-cap-tag">S</span>' : ''}</div>
-          <div class="${gc}" style="font-family:'Share Tech Mono',monospace;font-size:9px;letter-spacing:1px">${grade}</div>
+          ${packPts > 0 ? `<div class="attr-pack-pts">+${packPts} SP</div>` : ''}
+          <div class="attr-grade-row">
+            <span class="${gc}" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px">${grade}</span>
+            ${gradedGrade ? `<span class="attr-graded-grade ${gradedGc}">(${gradedGrade})</span>` : ''}
+          </div>
         </div>
         <div class="attr-track" onclick="trackClick(event,'${attr.key}')">
           <div class="attr-fill ${softCap ? 'above-cap' : ''}" id="fill-${attr.key}" style="width:${fillPct}%"></div>
@@ -591,10 +635,12 @@ function buildAttrList() {
           onchange="setAttr('${attr.key}',parseInt(this.value)||0)"
           oninput="setAttr('${attr.key}',parseInt(this.value)||0)">
         <div class="attr-total">${total}</div>
+        <div class="sp-btn-wrap">
+          ${canRemovePack ? `<div class="sp-btn sp-minus" onclick="adjustPack('${attr.key}',-1)" title="Remove stat pack">−</div>` : ''}
+          <div class="sp-btn ${canAddPack ? '' : 'disabled'}" onclick="${canAddPack ? `adjustPack('${attr.key}',1)` : ''}" title="${canAddPack ? 'Add stat pack (+'+PTS_PER_PACK+' pts)' : 'No packs left'}">SP</div>
+        </div>
       </div>`;
   });
-
-  buildStatPackPanel();
 }
 
 function buildStatPackPanel() {
@@ -795,7 +841,7 @@ function updateCyberLoadDisplay() {
   const preview = document.getElementById('gradePreview');
   if (!g) { preview.style.display = 'none'; return; }
   preview.style.display = '';
-  document.getElementById('gradeBuffLabel').textContent = '+' + g.buff + '% to all stats';
+  document.getElementById('gradeBuffLabel').textContent = g.buff > 0 ? '+' + g.buff + '% to all stats (shown in brackets)' : 'No stat buff';
   const cap = getCyberneticLoadCap();
   const used = getCyberneticLoadUsed();
   const overload = used > cap;
@@ -889,7 +935,8 @@ function selectTech(name) {
   } else {
     state.technique = name;
     // Reset CT upgrades when switching technique
-    state.ctLevels = { potency:0, haste:0, efficiency:0, evo:0 };
+    state.ctLevels = { efficiency:0, potency:0, haste:0, evo:0 };
+    state.memoryDrives = 0;
   }
   buildTechGrid();
   buildCtUpgradePanel();
@@ -905,10 +952,12 @@ function filterTech(tier, btn) {
 // ============================================================
 // CT UPGRADE PANEL
 // ============================================================
+function getCtPointsSpent() {
+  return Object.values(state.ctLevels).reduce((sum, lv) => sum + lv, 0);
+}
+
 function getCtPointsAvailable() {
-  const total = state.memoryDrives * PTS_PER_DRIVE;
-  const spent = Object.values(state.ctLevels).reduce((sum, lv) => sum + ctTotalCost(lv), 0);
-  return total - spent;
+  return getCtPointsTotal() - getCtPointsSpent();
 }
 
 function buildCtUpgradePanel() {
@@ -921,72 +970,96 @@ function buildCtUpgradePanel() {
 
   const tech = TECHNIQUES.find(t => t.name === state.technique);
   const color = tech ? TIER_COLORS[tech.tier] : '#aaa';
+  const maxEvo = tech ? (tech.evo || 0) : 0;
   document.getElementById('ctSelectedName').innerHTML = `<span style="color:${color}">${state.technique}</span>`;
 
-  // Drive pips
+  // Drive pips (up to 5)
   const pipsEl = document.getElementById('drivePips');
   let pipsHtml = '';
   for (let i = 1; i <= MAX_DRIVES; i++) {
     const active = i <= state.memoryDrives ? 'active' : '';
-    pipsHtml += `<div class="drive-pip ${active}" onclick="toggleDrive(${i})">${i <= state.memoryDrives ? '✦' : i}</div>`;
+    pipsHtml += `<div class="drive-pip ${active}" onclick="toggleDrive(${i})">${i <= state.memoryDrives ? '◈' : i}</div>`;
   }
   pipsEl.innerHTML = pipsHtml;
-  document.getElementById('driveInfo').textContent = (state.memoryDrives * PTS_PER_DRIVE) + ' / ' + (MAX_DRIVES * PTS_PER_DRIVE) + ' bonus points';
+  document.getElementById('driveInfo').textContent = `${state.memoryDrives} / ${MAX_DRIVES} drives equipped  ·  +${state.memoryDrives * DRIVE_BONUS} pts`;
 
   // Points label
   const avail = getCtPointsAvailable();
-  document.getElementById('ctPointsLabel').textContent = avail + ' PTS LEFT';
+  const total = getCtPointsTotal();
+  document.getElementById('ctPointsLabel').textContent = avail + ' / ' + total + ' PTS';
   document.getElementById('ctPointsLabel').style.color = avail === 0 ? '#e05555' : '';
 
   // Upgrade cards
   const upgradesEl = document.getElementById('ctUpgrades');
   let html = '';
-  CT_STATS.forEach(s => {
-    const lv = state.ctLevels[s.key] || 0;
-    const nextCost = lv < s.maxLv ? ctLevelCost(lv + 1) : 0;
-    const canUp = lv < s.maxLv && avail >= nextCost;
+
+  // Trio: Efficiency, Potency, Haste
+  ['efficiency','potency','haste'].forEach(key => {
+    const s = CT_STATS.find(x => x.key === key);
+    const lv = state.ctLevels[key] || 0;
+    const canUp = lv < CT_STAT_MAX && avail >= 1;
     const canDown = lv > 0;
+    const col = trioColor(lv);
+    const glow = trioGlow(lv);
     html += `
-      <div class="ct-upgrade-card ${s.css}">
-        <div class="ct-upgrade-label">${s.name}</div>
+      <div class="ct-upgrade-card trio" style="border-color:${col};box-shadow:${glow}">
+        <div class="ct-upgrade-bar" style="background:${col};opacity:${0.15 + lv*0.17}"></div>
+        <div class="ct-upgrade-label" style="color:${col}">${s.name}</div>
         <div class="ct-upgrade-controls">
-          <div class="ct-upgrade-btn ${canDown?'':'disabled'}" onclick="${canDown?`ctAdjust('${s.key}',-1)`:''}">&minus;</div>
-          <div class="ct-upgrade-level">${lv}</div>
-          <div class="ct-upgrade-btn ${canUp?'':'disabled'}" onclick="${canUp?`ctAdjust('${s.key}',1)`:''}">&plus;</div>
+          <div class="ct-upgrade-btn ${canDown?'':'disabled'}" onclick="${canDown?`ctAdjust('${key}',-1)`:''}">&minus;</div>
+          <div class="ct-upgrade-level" style="color:${col}">${lv}</div>
+          <div class="ct-upgrade-btn ${canUp?'':'disabled'}" onclick="${canUp?`ctAdjust('${key}',1)`:''}">&plus;</div>
         </div>
-        <div class="ct-upgrade-cost">${lv < s.maxLv ? 'NEXT: '+nextCost+' PT' : 'MAX'}</div>
+        <div class="ct-upgrade-cost" style="color:${col}">${lv < CT_STAT_MAX ? lv+' / '+CT_STAT_MAX : 'MAX'}</div>
       </div>`;
   });
+
+  // EVO (only if technique has evos)
+  if (maxEvo > 0) {
+    const lv = Math.min(state.ctLevels.evo || 0, maxEvo);
+    const canUp = lv < maxEvo && avail >= 1;
+    const canDown = lv > 0;
+    html += `
+      <div class="ct-upgrade-card evo">
+        <div class="ct-upgrade-label">EVO</div>
+        <div class="ct-upgrade-controls">
+          <div class="ct-upgrade-btn ${canDown?'':'disabled'}" onclick="${canDown?`ctAdjust('evo',-1)`:''}">&minus;</div>
+          <div class="ct-upgrade-level">${lv}</div>
+          <div class="ct-upgrade-btn ${canUp?'':'disabled'}" onclick="${canUp?`ctAdjust('evo',1)`:''}">&plus;</div>
+        </div>
+        <div class="ct-upgrade-cost">${lv < maxEvo ? lv+' / '+maxEvo : 'MAX'}</div>
+      </div>`;
+  }
+
   upgradesEl.innerHTML = html;
 }
 
 function toggleDrive(n) {
   state.memoryDrives = state.memoryDrives === n ? n - 1 : n;
-  // Clamp CT levels if we lost points
   clampCtLevels();
   buildCtUpgradePanel();
 }
 
 function ctAdjust(key, dir) {
+  const maxLv = key === 'evo'
+    ? (TECHNIQUES.find(t => t.name === state.technique)?.evo || 0)
+    : CT_STAT_MAX;
   const newLv = (state.ctLevels[key] || 0) + dir;
-  const stat = CT_STATS.find(s => s.key === key);
-  if (newLv < 0 || newLv > stat.maxLv) return;
-  if (dir > 0 && getCtPointsAvailable() < ctLevelCost(newLv)) return;
+  if (newLv < 0 || newLv > maxLv) return;
+  if (dir > 0 && getCtPointsAvailable() < 1) return;
   state.ctLevels[key] = newLv;
   buildCtUpgradePanel();
 }
 
 function clampCtLevels() {
-  let totalPts = state.memoryDrives * PTS_PER_DRIVE;
-  // Remove levels until we fit
-  const keys = ['evo','efficiency','haste','potency'];
-  let spent = Object.values(state.ctLevels).reduce((s,lv) => s + ctTotalCost(lv), 0);
-  while (spent > totalPts) {
+  const total = getCtPointsTotal();
+  const keys = ['evo','haste','potency','efficiency'];
+  let spent = getCtPointsSpent();
+  while (spent > total) {
     for (const k of keys) {
-      if (state.ctLevels[k] > 0 && spent > totalPts) {
-        spent -= state.ctLevels[k];
+      if (state.ctLevels[k] > 0 && spent > total) {
         state.ctLevels[k]--;
-        spent += ctTotalCost(state.ctLevels[k]);
+        spent--;
       }
     }
   }
@@ -1015,14 +1088,20 @@ function buildSummary() {
 
   let ctHtml = '';
   if (tech) {
-    const totalPts = state.memoryDrives * PTS_PER_DRIVE;
-    const usedPts = Object.values(state.ctLevels).reduce((s,lv) => s + ctTotalCost(lv), 0);
+    const totalPts = getCtPointsTotal();
+    const usedPts  = getCtPointsSpent();
+    const maxEvo   = tech.evo || 0;
+    const allStats = [...CT_STATS, ...(maxEvo > 0 ? [{ key:'evo', name:'EVO' }] : [])];
     ctHtml = `
       <div class="summary-block" style="grid-column:1/-1">
         <div class="summary-block-title">Technique Upgrades</div>
-        <div class="summary-row"><span class="summary-key">Memory Drives</span><span class="summary-val">${state.memoryDrives} / ${MAX_DRIVES}</span></div>
+        <div class="summary-row"><span class="summary-key">Drives</span><span class="summary-val">${state.memoryDrives} / ${MAX_DRIVES}  (+${state.memoryDrives * DRIVE_BONUS} pts)</span></div>
         <div class="summary-row"><span class="summary-key">Points Used</span><span class="summary-val">${usedPts} / ${totalPts}</span></div>
-        ${CT_STATS.map(s => `<div class="summary-row"><span class="summary-key">${s.name}</span><span class="summary-val">${state.ctLevels[s.key] || 0} / ${s.maxLv}</span></div>`).join('')}
+        ${allStats.map(s => {
+          const lv = state.ctLevels[s.key] || 0;
+          const cap = s.key === 'evo' ? maxEvo : CT_STAT_MAX;
+          return `<div class="summary-row"><span class="summary-key">${s.name}</span><span class="summary-val">${lv} / ${cap}</span></div>`;
+        }).join('')}
       </div>`;
   }
 
@@ -1055,11 +1134,14 @@ function buildSummary() {
       <div style="margin-top:6px; border-top:1px solid var(--border); padding-top:6px"></div>
       ${ATTRIBUTES.map(a => {
         const total = getEffectiveStat(a.key);
+        const graded = getGradedStat(a.key);
         const grade = getGrade(total);
         const gc = gradeClass(grade);
+        const gradedGrade = graded !== null ? getGrade(graded) : null;
+        const gradedGc    = gradedGrade ? gradeClass(gradedGrade) : '';
         return `<div class="summary-row">
           <span class="summary-key">${a.name}</span>
-          <span class="summary-val"><span class="${gc}">${grade}</span> <span style="color:var(--text-dim);font-size:11px">(${total})</span></span>
+          <span class="summary-val"><span class="${gc}">${grade}</span>${gradedGrade ? ` <span class="${gradedGc}" style="font-size:11px">(${gradedGrade})</span>` : ''} <span style="color:var(--text-dim);font-size:11px">${total}</span></span>
         </div>`;
       }).join('')}
     </div>
@@ -1095,7 +1177,7 @@ function resetBuild() {
     attrs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
     packs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
     techFilter:'all', memoryDrives:0,
-    ctLevels:{potency:0,haste:0,efficiency:0,evo:0},
+    ctLevels:{efficiency:0,potency:0,haste:0,evo:0},
     playerGrade:'', cybernetics:[], cyberFilter:'all',
   };
   document.getElementById('buildName').value = '';
@@ -1153,7 +1235,7 @@ function loadFromHash() {
     if (d.t) state.technique = d.t;
     if (d.a) Object.keys(d.a).forEach(k => { state.attrs[k] = d.a[k]||0; });
     if (d.sp) Object.keys(d.sp).forEach(k => { state.packs[k] = d.sp[k]||0; });
-    if (d.md) state.memoryDrives = d.md;
+    if (d.md !== undefined) state.memoryDrives = d.md;
     if (d.ct) Object.keys(d.ct).forEach(k => { state.ctLevels[k] = d.ct[k]||0; });
     if (d.pg) { state.playerGrade = d.pg; document.getElementById('gradeSelect').value = d.pg; }
     if (d.cy) state.cybernetics = d.cy;
