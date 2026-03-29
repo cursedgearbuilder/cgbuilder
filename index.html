@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cursed Gear — Build Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- Gear watermark SVG -->
+<svg class="gear-watermark" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .wm-heavy { stroke: rgba(200,169,110,0.07); stroke-width: 2; fill: none; }
+      .wm-light { stroke: rgba(200,169,110,0.04); stroke-width: 1; fill: none; }
+      .wm-tooth { stroke: rgba(200,169,110,0.06); stroke-width: 3; fill: none; }
+    </style>
+  </defs>
+  <!-- Outer gear teeth -->
+  <circle cx="100" cy="100" r="90" class="wm-light"/>
+  <circle cx="100" cy="100" r="82" class="wm-tooth"/>
+  <!-- Gear teeth notches -->
+  <g class="wm-tooth">
+    <line x1="100" y1="8" x2="100" y2="22"/>
+    <line x1="100" y1="178" x2="100" y2="192"/>
+    <line x1="8" y1="100" x2="22" y2="100"/>
+    <line x1="178" y1="100" x2="192" y2="100"/>
+    <line x1="35" y1="35" x2="45" y2="45"/>
+    <line x1="155" y1="35" x2="165" y2="45"/>
+    <line x1="35" y1="155" x2="45" y2="165"/>
+    <line x1="155" y1="155" x2="165" y2="165"/>
+    <!-- Extra teeth -->
+    <line x1="55" y1="13" x2="60" y2="26"/>
+    <line x1="145" y1="13" x2="140" y2="26"/>
+    <line x1="55" y1="187" x2="60" y2="174"/>
+    <line x1="145" y1="187" x2="140" y2="174"/>
+    <line x1="13" y1="55" x2="26" y2="60"/>
+    <line x1="13" y1="145" x2="26" y2="140"/>
+    <line x1="187" y1="55" x2="174" y2="60"/>
+    <line x1="187" y1="145" x2="174" y2="140"/>
+  </g>
+  <!-- Inner rings -->
+  <circle cx="100" cy="100" r="65" class="wm-heavy"/>
+  <circle cx="100" cy="100" r="45" class="wm-light"/>
+  <circle cx="100" cy="100" r="25" class="wm-heavy"/>
+  <circle cx="100" cy="100" r="8" fill="rgba(200,169,110,0.04)"/>
+  <!-- Cross lines -->
+  <g class="wm-light">
+    <line x1="100" y1="35" x2="100" y2="165"/>
+    <line x1="35" y1="100" x2="165" y2="100"/>
+    <line x1="54" y1="54" x2="146" y2="146"/>
+    <line x1="146" y1="54" x2="54" y2="146"/>
+  </g>
+</svg>
+
+<div class="app">
+
+  <!-- Ad Banner Top -->
+  <div class="ad-slot ad-banner" id="adBanner">
+    <span class="ad-placeholder">AD SPACE — 728x90</span>
+  </div>
+
+  <header>
+    <div class="logo">
+      <div class="logo-title">Cursed Gear</div>
+      <div class="logo-sub">Builder &nbsp;·&nbsp; v1.0</div>
+    </div>
+    <div class="logo-disclaimer">Cursed Gear Builder is still in development, and the devs have not revealed the math for attributes and scaling. Not all information may be 100% accurate as of right now.</div>
+    <div class="header-actions">
+      <button class="btn" onclick="resetBuild()">↺ Reset</button>
+      <button class="btn" onclick="exportBuild()">⬡ Export Code</button>
+      <button class="btn btn-primary" onclick="shareBuild()">⬆ Share</button>
+    </div>
+  </header>
+
+  <div class="main-grid">
+
+    <!-- LEFT: Identity + Attributes + CT Upgrades -->
+    <div>
+
+      <!-- Identity -->
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header">
+          <span class="panel-title">Identity</span>
+          <span class="panel-badge">CHARACTER</span>
+        </div>
+        <div class="panel-body">
+          <div class="identity-grid">
+            <div class="field-group">
+              <div class="field-label"><span>01</span> Build Name</div>
+              <input type="text" id="buildName" placeholder="My Build..." maxlength="32">
+            </div>
+            <div class="field-group">
+              <div class="field-label"><span>02</span> Gear (Class)</div>
+              <select id="gearSelect" onchange="updateGearPreview()">
+                <option value="">— Select Gear —</option>
+                <option value="Executioner">Executioner</option>
+                <option value="Projector">Projector</option>
+                <option value="Manipulator">Manipulator</option>
+                <option value="Constructor">Constructor</option>
+                <option value="Ravager">Ravager</option>
+                <option value="Sensor">Sensor</option>
+                <option value="Interceptor">Interceptor</option>
+                <option value="Usurper">Usurper</option>
+                <option value="Hydra">Hydra</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <div class="field-label"><span>03</span> Clan</div>
+              <select id="clanSelect" onchange="updateClanPreview()">
+                <option value="">— Select Clan —</option>
+                <optgroup label="▸ Royal">
+                  <option value="Gojo|royal">Gojo</option>
+                  <option value="Kamo|royal">Kamo</option>
+                  <option value="Nier|royal">Nier</option>
+                  <option value="Zenin|royal">Zenin</option>
+                </optgroup>
+                <optgroup label="▸ Unique">
+                  <option value="Amai|unique">Amai</option>
+                  <option value="Hazenoki|unique">Hazenoki</option>
+                  <option value="Itadori|unique">Itadori</option>
+                  <option value="Kashimo|unique">Kashimo</option>
+                  <option value="Nishimiya|unique">Nishimiya</option>
+                  <option value="Panda|unique">Panda</option>
+                  <option value="Todo|unique">Todo</option>
+                </optgroup>
+                <optgroup label="▸ Rare">
+                  <option value="Crow|rare">Crow</option>
+                  <option value="Eve|rare">Eve</option>
+                  <option value="Kusakabe|rare">Kusakabe</option>
+                  <option value="Kuroi|rare">Kuroi</option>
+                  <option value="Storm|rare">Storm</option>
+                  <option value="Yoshino|rare">Yoshino</option>
+                </optgroup>
+                <optgroup label="▸ Common">
+                  <option value="Fushiguro|common">Fushiguro</option>
+                  <option value="Nanami|common">Nanami</option>
+                  <option value="Okkotsu|common">Okkotsu</option>
+                  <option value="Hakari|common">Hakari</option>
+                  <option value="Inumaki|common">Inumaki</option>
+                  <option value="Miwa|common">Miwa</option>
+                  <option value="Geto|common">Geto</option>
+                  <option value="Kugisaki|common">Kugisaki</option>
+                </optgroup>
+              </select>
+              <div class="clan-preview" id="clanPreview">
+                <div class="clan-tier-dot" id="clanDot" style="background: var(--text-muted)"></div>
+                <div class="clan-desc" id="clanDesc">Select a clan to see its passive ability.</div>
+              </div>
+            </div>
+            <div class="field-group">
+              <div class="field-label"><span>04</span> Player Grade</div>
+              <select id="gradeSelect" onchange="updateGrade()">
+                <option value="">— Select Grade —</option>
+                <option value="Grade 4">Grade 4</option>
+                <option value="Grade 3">Grade 3</option>
+                <option value="Semi-Grade 2">Semi-Grade 2</option>
+                <option value="Grade 2">Grade 2</option>
+                <option value="Semi-Grade 1">Semi-Grade 1</option>
+                <option value="Grade 1">Grade 1</option>
+                <option value="Special Grade 1">Special Grade 1</option>
+                <option value="Special Grade">Special Grade</option>
+              </select>
+              <div class="grade-preview" id="gradePreview" style="display:none">
+                <div class="grade-buff-label" id="gradeBuffLabel"></div>
+                <div class="cyber-load-row">
+                  <span class="cyber-load-label">Cybernetic Load</span>
+                  <span class="cyber-load-val" id="cyberLoadVal">0 / —</span>
+                </div>
+                <div class="cyber-load-bar-wrap">
+                  <div class="cyber-load-bar-fill" id="cyberLoadFill"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Attributes -->
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header">
+          <span class="panel-title">Attributes</span>
+          <span class="panel-badge" id="gradeLabel">LVL 0</span>
+        </div>
+        <div class="panel-body">
+          <!-- Radar Chart -->
+          <div class="radar-wrap">
+            <svg id="radarSvg" viewBox="0 0 260 260" width="260" height="260"></svg>
+          </div>
+          <div class="attr-list" id="attrList"></div>
+        </div>
+        <div class="budget-track"><div class="budget-fill" id="budgetFill" style="width:0%"></div></div>
+        <div class="budget-bar">
+          <span class="budget-label">Player Level</span>
+          <span class="budget-count" id="budgetCount">0 / 150</span>
+        </div>
+      </div>
+
+      <!-- Stat Packs -->
+      <div class="panel" style="margin-bottom:16px">
+        <div class="panel-header">
+          <span class="panel-title">Stat Packs</span>
+          <span class="panel-badge" id="packCount">6 / 6</span>
+        </div>
+        <div class="panel-body">
+          <div class="pack-desc">Every 25 levels you receive a stat pack. Dump 25 points into any attribute.</div>
+          <div class="pack-list" id="packList"></div>
+        </div>
+      </div>
+
+
+      <!-- Equipped Cybernetics Panel -->
+      <div class="panel" id="equippedCyberPanel" style="display:none">
+        <div class="panel-header">
+          <span class="panel-title">Cybernetics</span>
+          <span class="panel-badge" id="cyberLoadBadge">0 LOAD</span>
+        </div>
+        <div class="panel-body">
+          <div id="equippedCyberList"></div>
+        </div>
+      </div>
+
+      <!-- CT Upgrade Panel -->
+      <div class="panel" id="ctUpgradePanel" style="display:none">
+        <div class="panel-header">
+          <span class="panel-title">Technique Upgrades</span>
+          <span class="panel-badge" id="ctPointsLabel">0 PTS</span>
+        </div>
+        <div class="panel-body">
+          <div class="ct-selected-name" id="ctSelectedName">—</div>
+          <div class="memory-drives">
+            <div class="field-label">Memory Drives</div>
+            <div class="drive-pips" id="drivePips"></div>
+            <div class="drive-info" id="driveInfo">0 / 25 bonus points</div>
+          </div>
+          <div class="ct-upgrades" id="ctUpgrades"></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Tabs + Ad sidebar -->
+    <div class="right-col">
+    <div class="panel">
+      <div class="tabs">
+        <div class="tab active" onclick="switchTab('techniques',this)">Techniques</div>
+        <div class="tab" onclick="switchTab('cybernetics',this)">Cybernetics</div>
+        <div class="tab" onclick="switchTab('summary',this)">Summary</div>
+        <div class="tab" onclick="switchTab('gears',this)">Gear</div>
+      </div>
+
+      <div id="tab-gears" class="tab-content">
+        <div class="gear-grid" id="gearGrid"></div>
+      </div>
+
+      <div id="tab-techniques" class="tab-content active">
+        <div class="technique-filter">
+          <button class="filter-btn active" onclick="filterTech('all',this)">All</button>
+          <button class="filter-btn royal" onclick="filterTech('royal',this)">Royal</button>
+          <button class="filter-btn unique" onclick="filterTech('unique',this)">Unique</button>
+          <button class="filter-btn rare" onclick="filterTech('rare',this)">Rare</button>
+          <button class="filter-btn common" onclick="filterTech('common',this)">Common</button>
+        </div>
+        <div class="technique-grid" id="techGrid"></div>
+      </div>
+
+      <div id="tab-cybernetics" class="tab-content">
+        <div class="technique-filter">
+          <button class="cyber-filter-btn filter-btn active" onclick="filterCyber('all',this)">All</button>
+          <button class="cyber-filter-btn filter-btn" onclick="filterCyber('Active',this)" style="color:#c8a96e">Active</button>
+          <button class="cyber-filter-btn filter-btn" onclick="filterCyber('Passive',this)" style="color:#4a9eff">Passive</button>
+          <button class="cyber-filter-btn filter-btn" onclick="filterCyber('Toolbar',this)" style="color:#b060e0">Toolbar</button>
+          <button class="cyber-filter-btn filter-btn" onclick="filterCyber('Vow',this)" style="color:#e05555">Vow</button>
+        </div>
+        <div class="cyber-grid" id="cyberGrid"></div>
+      </div>
+
+      <div id="tab-summary" class="tab-content">
+        <div class="summary-grid" id="summaryGrid"></div>
+      </div>
+    <!-- Ad Sidebar -->
+    <div class="ad-slot ad-sidebar" id="adSidebar">
+      <span class="ad-placeholder">AD SPACE<br>300x250</span>
+    </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast">Link Copied!</div>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+# Trello export — not needed in the public repo
+*.json
+
+# Dev scratch files
+cards_missing_search.txt
+cards_output.txt
+todo.txt
