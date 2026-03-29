@@ -26,7 +26,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'IBM Plex Mono', monospace;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 13px;
   min-height: 100vh;
   overflow-x: hidden;
@@ -135,14 +135,13 @@ header::before {
 
 .logo-disclaimer {
   font-family: 'IBM Plex Mono', monospace;
-  font-weight: 300;
+  font-weight: 400;
   font-size: 9px;
   color: var(--text-muted);
   line-height: 1.6;
-  max-width: 340px;
+  max-width: 420px;
   letter-spacing: 0.3px;
-  border-left: 1px solid var(--border-bright);
-  padding-left: 14px;
+  margin-top: 4px;
 }
 
 .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
@@ -281,7 +280,7 @@ header::before {
   font-size: 9px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-dim);
 }
 
 .field-label span { color: var(--accent-dim); margin-right: 6px; }
@@ -318,8 +317,8 @@ select option { background: #161520; }
 /* ── CLAN BADGE ── */
 .clan-preview {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 6px;
   padding: 8px 10px;
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -339,7 +338,14 @@ select option { background: #161520; }
   font-size: 10px;
   color: var(--text-dim);
   line-height: 1.5;
-  flex: 1;
+}
+
+.royal-attr-row select {
+  border-color: rgba(224,192,64,0.35);
+}
+
+.royal-attr-row select:focus {
+  border-color: var(--royal);
 }
 
 /* ── GRADE PREVIEW ── */
@@ -590,7 +596,7 @@ select option { background: #161520; }
   font-size: 9px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-dim);
 }
 
 .budget-count {
@@ -705,7 +711,7 @@ select option { background: #161520; }
   font-size: 9px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text-dim);
   margin-bottom: 6px;
 }
 
@@ -747,7 +753,7 @@ select option { background: #161520; }
 .ct-upgrade-cost {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  color: var(--text-muted);
+  color: var(--text-dim);
   letter-spacing: 1px;
   margin-top: 4px;
 }
@@ -764,7 +770,7 @@ select option { background: #161520; }
   font-family: 'IBM Plex Mono', monospace;
   font-size: 10px;
   letter-spacing: 3px;
-  color: var(--text-muted);
+  color: var(--text-dim);
   cursor: pointer;
   border-bottom: 2px solid transparent;
   transition: all 0.15s;
@@ -963,7 +969,7 @@ select option { background: #161520; }
 .tech-roll {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  color: var(--text-muted);
+  color: var(--text-dim);
 }
 
 /* ── SUMMARY ── */
@@ -1003,7 +1009,7 @@ select option { background: #161520; }
 .summary-key {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  color: var(--text-muted);
+  color: var(--text-dim);
   letter-spacing: 2px;
   text-transform: uppercase;
 }
@@ -1058,7 +1064,7 @@ select option { background: #161520; }
 
 .cyber-type-badge {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 1px;
   flex-shrink: 0;
   margin-top: 1px;
@@ -1080,8 +1086,8 @@ select option { background: #161520; }
 
 .cyber-desc {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 9px;
-  color: var(--text-muted);
+  font-size: 10px;
+  color: var(--text-dim);
   line-height: 1.5;
   letter-spacing: 0.3px;
   display: -webkit-box;
@@ -1117,7 +1123,7 @@ select option { background: #161520; }
 
 .equipped-cyber-type {
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 8px;
+  font-size: 9px;
   letter-spacing: 1px;
   opacity: 0.6;
 }

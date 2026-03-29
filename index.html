@@ -64,12 +64,12 @@
         <div class="logo-title">Cursed Gear Builder</div>
       </div>
       <div class="logo-sub">Version &nbsp;·&nbsp; 1.0</div>
+      <div class="logo-disclaimer">Cursed Gear Builder is still in development, and the devs have not revealed the math for attributes and scaling. Not all information may be 100% accurate as of right now. You can help perfect it by reporting bugs in the discord.</div>
     </div>
-    <div class="logo-disclaimer">Cursed Gear Builder is still in development, and the devs have not revealed the math for attributes and scaling. Not all information may be 100% accurate as of right now.</div>
     <div class="header-right">
       <div class="header-links">
         <a class="header-link kofi" href="https://ko-fi.com/bonzonini" target="_blank" rel="noopener" title="support me by buying me a pint of beer on Ko-fi">
-          <span class="header-link-icon">♥</span><span class="header-link-label">Ko-fi</span>
+          <span class="header-link-icon">♥</span><span class="header-link-label">Buy me a Pint</span>
         </a>
         <a class="header-link discord" href="https://discord.gg/YEHXknPZWc" target="_blank" rel="noopener" title="Cursed Gear Info / Builder Discord">
           <span class="header-link-icon">◈</span><span class="header-link-label">Discord</span>
@@ -81,6 +81,7 @@
       <div class="header-actions">
         <button class="btn" onclick="resetBuild()">↺ Reset</button>
         <button class="btn" onclick="exportBuild()">⬡ Export Code</button>
+        <button class="btn" onclick="importBuild()">⬇ Import Code</button>
         <button class="btn btn-primary" onclick="shareBuild()">⬆ Share</button>
       </div>
     </div>
@@ -157,8 +158,10 @@
                 </optgroup>
               </select>
               <div class="clan-preview" id="clanPreview">
-                <div class="clan-tier-dot" id="clanDot" style="background: var(--text-muted)"></div>
-                <div class="clan-desc" id="clanDesc">Select a clan to see its passive ability.</div>
+                <div style="display:flex;align-items:center;gap:8px">
+                  <div class="clan-tier-dot" id="clanDot" style="background: var(--text-muted)"></div>
+                  <div class="clan-desc" id="clanDesc">Select a clan to see its passive ability.</div>
+                </div>
               </div>
             </div>
             <div class="field-group">

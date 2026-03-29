@@ -160,7 +160,7 @@ const TECHNIQUES = [
   { name:'Sun Breather',       tier:'common', roll:2.42, evo:0 },
   { name:'Shadow Realm',       tier:'common', roll:2.42, evo:0 },
   { name:'Sea King',           tier:'common', roll:2.42, evo:1 },
-  { name:'Ink',                tier:'common', roll:2.42, evo:3 },
+  { name:'Ink',                tier:'unique', roll:0.83, evo:3 },
   { name:'Power Of Friendship',tier:'common', roll:2.42, evo:0 },
   { name:'Madness Factor',     tier:'common', roll:2.42, evo:0 },
   { name:'No Enemies',         tier:'common', roll:2.42, evo:0 },
@@ -451,6 +451,7 @@ let state = {
   technique: null,
   attrs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
   packs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
+  royalAttrBuff: '',
   techFilter: 'all',
   memoryDrives: 0,
   ctLevels: { efficiency:0, potency:0, haste:0, evo:0 },
@@ -491,11 +492,18 @@ function getEffectiveStat(key) {
   return getStatTotal(key) + getCyberneticStatBonus(key);
 }
 
-// Grade-buffed stat — shown in brackets next to the base, like the real game
+// Returns true if the selected clan is royal
+function isRoyalClan() {
+  return CLAN_DATA[state.clan]?.tier === 'royal';
+}
+
+// Grade + royal buff combined — shown in brackets next to base stat
 function getGradedStat(key) {
-  const raw = getEffectiveStat(key);
-  const buff = getStatBuff();
-  return buff > 0 ? Math.floor(raw * (1 + buff / 100)) : null;
+  const raw      = getEffectiveStat(key);
+  const gradePct = getStatBuff();
+  const royalMul = (isRoyalClan() && state.royalAttrBuff === key) ? 1.10 : 1.0;
+  if (gradePct === 0 && royalMul === 1.0) return null;
+  return Math.floor(raw * (1 + gradePct / 100) * royalMul);
 }
 
 function getCyberneticLoadCap() {
@@ -902,8 +910,34 @@ function updateClanPreview() {
     dot.style.background = 'var(--text-muted)';
     desc.textContent = 'Select a clan to see its passive ability.';
     desc.style.color = 'var(--text-dim)';
+    state.royalAttrBuff = '';
   }
-  updateCyberLoadDisplay(); // Nier clan affects load cap
+  // Royal buff picker
+  const existing = document.getElementById('royalAttrRow');
+  if (existing) existing.remove();
+  if (data && data.tier === 'royal') {
+    const row = document.createElement('div');
+    row.id = 'royalAttrRow';
+    row.className = 'royal-attr-row';
+    row.innerHTML = `
+      <div class="field-label" style="margin-top:8px"><span style="color:var(--royal)">◆</span> Royal Attribute Buff <span style="color:var(--text-muted);font-size:9px">+10%</span></div>
+      <select id="royalAttrSelect" onchange="setRoyalAttrBuff(this.value)">
+        <option value="">— Choose attribute —</option>
+        ${ATTRIBUTES.map(a => `<option value="${a.key}" ${state.royalAttrBuff === a.key ? 'selected' : ''}>${a.name}</option>`).join('')}
+      </select>`;
+    document.getElementById('clanPreview').appendChild(row);
+  } else {
+    state.royalAttrBuff = '';
+  }
+  updateCyberLoadDisplay();
+  buildAttrList();
+  buildRadarChart();
+}
+
+function setRoyalAttrBuff(key) {
+  state.royalAttrBuff = key;
+  buildAttrList();
+  buildRadarChart();
 }
 
 // ============================================================
@@ -1176,7 +1210,7 @@ function resetBuild() {
     buildName:'', gear:null, clan:'', technique:null,
     attrs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
     packs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
-    techFilter:'all', memoryDrives:0,
+    royalAttrBuff:'', techFilter:'all', memoryDrives:0,
     ctLevels:{efficiency:0,potency:0,haste:0,evo:0},
     playerGrade:'', cybernetics:[], cyberFilter:'all',
   };
@@ -1203,6 +1237,7 @@ function buildPayload() {
     t: state.technique,
     a: state.attrs,
     sp: state.packs,
+    ra: state.royalAttrBuff,
     md: state.memoryDrives,
     ct: state.ctLevels,
     pg: state.playerGrade,
@@ -1213,6 +1248,38 @@ function buildPayload() {
 function exportBuild() {
   const code = btoa(JSON.stringify(buildPayload()));
   prompt('Copy your build code:', code);
+}
+
+function importBuild() {
+  const code = prompt('Paste your build code:');
+  if (!code) return;
+  try {
+    const d = JSON.parse(atob(code.trim()));
+    if (d.n) document.getElementById('buildName').value = d.n;
+    if (d.g) { state.gear = d.g; document.getElementById('gearSelect').value = d.g; }
+    if (d.c) { state.clan = d.c; document.getElementById('clanSelect').value = d.c; updateClanPreview(); }
+    if (d.t) state.technique = d.t;
+    if (d.a) Object.keys(d.a).forEach(k => { if (state.attrs[k] !== undefined) state.attrs[k] = d.a[k]||0; });
+    if (d.sp) Object.keys(d.sp).forEach(k => { if (state.packs[k] !== undefined) state.packs[k] = d.sp[k]||0; });
+    if (d.ra !== undefined) state.royalAttrBuff = d.ra;
+    if (d.md !== undefined) state.memoryDrives = d.md;
+    if (d.ct) Object.keys(d.ct).forEach(k => { if (state.ctLevels[k] !== undefined) state.ctLevels[k] = d.ct[k]||0; });
+    if (d.pg) { state.playerGrade = d.pg; document.getElementById('gradeSelect').value = d.pg; }
+    if (d.cy) state.cybernetics = d.cy;
+    buildGearGrid();
+    buildAttrList();
+    buildRadarChart();
+    buildTechGrid();
+    buildCtUpgradePanel();
+    updateBudget();
+    updateCyberLoadDisplay();
+    const toast = document.getElementById('toast');
+    toast.textContent = 'Build Imported!';
+    toast.classList.add('show');
+    setTimeout(() => { toast.classList.remove('show'); toast.textContent = 'Link Copied!'; }, 2500);
+  } catch(e) {
+    alert('Invalid build code.');
+  }
 }
 
 function shareBuild() {
@@ -1235,6 +1302,7 @@ function loadFromHash() {
     if (d.t) state.technique = d.t;
     if (d.a) Object.keys(d.a).forEach(k => { state.attrs[k] = d.a[k]||0; });
     if (d.sp) Object.keys(d.sp).forEach(k => { state.packs[k] = d.sp[k]||0; });
+    if (d.ra !== undefined) state.royalAttrBuff = d.ra;
     if (d.md !== undefined) state.memoryDrives = d.md;
     if (d.ct) Object.keys(d.ct).forEach(k => { state.ctLevels[k] = d.ct[k]||0; });
     if (d.pg) { state.playerGrade = d.pg; document.getElementById('gradeSelect').value = d.pg; }
