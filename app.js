@@ -87,7 +87,7 @@ const CLAN_DATA = {
   'Crow|rare':       { tier:'rare',   desc:'Devastating Strike ignores the damage cap.' },
   'Eve|rare':        { tier:'rare',   desc:'Gain more EXP from all sources.' },
   'Kusakabe|rare':   { tier:'rare',   desc:'+10% Awareness flat. 20% less NSS drain. NSS4 teleports on impact.' },
-  'Kuroi|common':    { tier:'common', desc:'+7% Awareness. New Shadow Style has reduced activation cost.' },
+  'Kuroi|common':    { tier:'common', desc:'+25% EXP gain (common clan bonus).' },
   'Storm|rare':      { tier:'rare',   desc:'+15% damage in Windswept environments.' },
   'Yoshino|rare':    { tier:'rare',   desc:'Landing an M1 grants +5 movement speed for 7 seconds.' },
   'Fushiguro|common':{ tier:'common', desc:'+25% EXP gain (common clan bonus).' },
