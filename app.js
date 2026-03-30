@@ -16,23 +16,22 @@ const ATTRIBUTES = [
   { key: 'dexterity',   name: 'Dexterity',   desc: 'Movement speed' },
 ];
 
-// Grade thresholds — reverse-engineered from real in-game data
-// Pre-soft-cap steps: F=2, E=2, D=3, C=4, B=6, A=8
-// Post-soft-cap steps: SF=10, SE=12, SD=14, SC=16, SB=18, SA=20, SS=22
+// Grade thresholds — even linear spread, F1=0 to SS5=600 (65 grades, ~9.4pts per step)
+// TEST RUN: placeholder until real in-game breakpoints are known
 const GRADE_THRESHOLDS = [
-  0,   2,   4,   6,   8,       // F1-F5   (step 2)
-  10,  12,  14,  16,  18,      // E1-E5   (step 2)
-  20,  23,  26,  29,  32,      // D1-D5   (step 3)
-  42,  46,  50,  54,  58,      // C1-C5   (step 4)
-  62,  68,  74,  80,  86,      // B1-B5   (step 6)
-  92, 100, 108, 116, 124,      // A1-A5   (step 8)  ── SOFT CAP ──
-  130, 140, 150, 160, 170,     // SF1-SF5 (step 10)
-  180, 192, 204, 216, 228,     // SE1-SE5 (step 12)
-  240, 254, 268, 282, 296,     // SD1-SD5 (step 14)
-  310, 326, 342, 358, 374,     // SC1-SC5 (step 16)
-  390, 408, 426, 444, 462,     // SB1-SB5 (step 18)
-  480, 500, 520, 540, 560,     // SA1-SA5 (step 20)
-  580, 602, 624, 646, 668,     // SS1-SS5 (step 22)
+    0,   9,  18,  28,  37,   // F1-F5
+   46,  56,  65,  75,  84,   // E1-E5
+   93, 103, 112, 121, 131,   // D1-D5
+  140, 150, 159, 168, 178,   // C1-C5
+  187, 196, 206, 215, 225,   // B1-B5
+  234, 243, 253, 262, 271,   // A1-A5  ── SOFT CAP ──
+  281, 290, 300, 309, 318,   // SF1-SF5
+  328, 337, 346, 356, 365,   // SE1-SE5
+  375, 384, 393, 403, 412,   // SD1-SD5
+  421, 431, 440, 450, 459,   // SC1-SC5
+  468, 478, 487, 496, 506,   // SB1-SB5
+  515, 525, 534, 543, 553,   // SA1-SA5
+  562, 571, 581, 590, 600,   // SS1-SS5
 ];
 
 const GRADE_LETTERS = ['F','E','D','C','B','A','SF','SE','SD','SC','SB','SA','SS'];
