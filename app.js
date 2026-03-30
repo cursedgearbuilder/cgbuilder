@@ -75,7 +75,7 @@ const GEARS = [
 const CLAN_DATA = {
   'Gojo|royal':      { tier:'royal',  desc:'Start with 5 CT points. Increased Technique Energy and regeneration.' },
   'Kamo|royal':      { tier:'royal',  desc:'M1 attacks grant lifesteal — 0.03% (0.5x with sword) max HP per hit.' },
-  'Nier|royal':      { tier:'royal',  desc:'50 more Cybernetic Load Cap. Auto-upgrade all equipped Cybernetics.' },
+  'Nier|royal':      { tier:'royal',  desc:'1.2x Cybernetic Load Cap. Auto-upgrade all equipped Cybernetics.' },
   'Zenin|royal':     { tier:'royal',  desc:'+8% damage vs non-royal clans. -3% vs royals. Innate Flicker Image.' },
   'Amai|unique':     { tier:'unique', desc:'M1 & M2 deal 10% less damage. All other attacks deal 10% more.' },
   'Hazenoki|unique': { tier:'unique', desc:'Sword M1/M2 deal 10% more damage. Take 10% more posture damage.' },
@@ -87,7 +87,7 @@ const CLAN_DATA = {
   'Crow|rare':       { tier:'rare',   desc:'Devastating Strike ignores the damage cap.' },
   'Eve|rare':        { tier:'rare',   desc:'Gain more EXP from all sources.' },
   'Kusakabe|rare':   { tier:'rare',   desc:'+10% Awareness flat. 20% less NSS drain. NSS4 teleports on impact.' },
-  'Kuroi|rare':      { tier:'rare',   desc:'+7% Awareness. New Shadow Style has reduced activation cost.' },
+  'Kuroi|common':    { tier:'common', desc:'+7% Awareness. New Shadow Style has reduced activation cost.' },
   'Storm|rare':      { tier:'rare',   desc:'+15% damage in Windswept environments.' },
   'Yoshino|rare':    { tier:'rare',   desc:'Landing an M1 grants +5 movement speed for 7 seconds.' },
   'Fushiguro|common':{ tier:'common', desc:'+25% EXP gain (common clan bonus).' },
@@ -151,6 +151,7 @@ const TECHNIQUES = [
   { name:'Heavy Rain',         tier:'rare',   roll:1.67, evo:0 },
   { name:'Judgement',          tier:'rare',   roll:1.67, evo:1 },
   { name:'Pain Packer',        tier:'rare',   roll:1.67, evo:0 },
+  { name:'The Balance',        tier:'rare',   roll:1.67, evo:0 },
   // Common - 2.42%
   { name:'Ball Of Doom',       tier:'common', roll:2.42, evo:0 },
   { name:'Yang',               tier:'common', roll:2.42, evo:0 },
@@ -185,7 +186,7 @@ const CYBERNETICS = [
   // ── ACTIVE ──
   { id:'monocyte_1',    name:'Monocyte Breeder Mk.1',           type:'Active',  load:10,  desc:'While holding E + T, the user can quickly regenerate lost limbs at the cost of burning out part of their Technique Bar.' },
   { id:'monocyte_2',    name:'Monocyte Breeder Mk.2',           type:'Active',  load:30,  desc:'While holding E + T, the user can quickly regenerate lost limbs and recently taken damage at the cost of burning out part of their Technique Bar. Successfully hitting opponents will also regenerate recently taken damage.' },
-  { id:'monocyte_3',    name:'Monocyte Breeder Mk.3',           type:'Active',  load:65,  desc:'While holding E + T, the user can quickly regenerate lost limbs and any lost health at the cost of burning out part of their Technique Bar. Successfully hitting opponents will also regenerate recently taken damage.' },
+  { id:'monocyte_3',    name:'Monocyte Breeder Mk.3',           type:'Active',  load:70,  desc:'While holding E + T, the user can quickly regenerate lost limbs and any lost health at the cost of burning out part of their Technique Bar. Successfully hitting opponents will also regenerate recently taken damage.' },
   { id:'polyeth_1',     name:'Polyethylene Scales Mk.1',        type:'Active',  load:35,  desc:'When pressing B, the user will activate Cursed Defense. Pressing E when being hit by energy attacks will reduce the damage.' },
   { id:'polyeth_2',     name:'Polyethylene Scales Mk.2',        type:'Active',  load:55,  desc:'When pressing B, the user will activate Cursed Defense. Pressing E when being hit by energy attacks will reduce the damage, and pressing F when being hit by physical attacks will do the same.' },
   { id:'polyeth_3',     name:'Polyethylene Scales Mk.3',        type:'Active',  load:75,  desc:'When pressing B, the user will activate Cursed Defense. Pressing E when being hit by energy attacks will reduce the damage, and pressing F when being hit by physical attacks will do the same. If the user successfully defends against six physical attacks in a row, they will break out of the combo at the cost of burning out part of their Technique Bar.' },
@@ -224,7 +225,7 @@ const CYBERNETICS = [
   { id:'stable',        name:'Stable',                           type:'Passive', load:10,  desc:'The user no longer sweats at low stamina.' },
   { id:'tsumoe_tear',   name:"Tsumoe's Tear",                    type:'Passive', load:10,  desc:"Single-hit attacks can no longer deal more than 20% of the user's max health." },
   { id:'overclock',     name:'Overclock',                        type:'Passive', load:10,  desc:'When the user is low on health, skill cooldowns are reduced by 25%.' },
-  { id:'the_exception', name:'The Exception',                    type:'Passive', load:10,  desc:'When pressing N, the user will tear off their shirt, revealing a muscular physique underneath. Purely cosmetic.' },
+  { id:'the_exception', name:'The Exception',                    type:'Passive', load:0,   desc:'When pressing N, the user will tear off their shirt, revealing a muscular physique underneath. Purely cosmetic.' },
   { id:'two_for_one',   name:'Two for One',                      type:'Passive', load:0,   desc:'When purchasing food, the user will receive two for the price of one.' },
   { id:'unbreakable',   name:'Unbreakable',                      type:'Passive', load:0,   desc:"The user's weapon no longer loses durability upon dying." },
   // ── TOOLBAR ──
@@ -303,6 +304,7 @@ const TECHNIQUE_URLS = {
   'Heavy Rain':          'https://trello.com/c/78oepbcS',
   'Judgement':           'https://trello.com/c/GjYdM0TI',
   'Pain Packer':         'https://trello.com/c/HYJts4cM',
+  'The Balance':         'https://trello.com/c/t25WCLAY',
   'Ball Of Doom':        'https://trello.com/c/pKUXdq2Z',
   'Yang':                'https://trello.com/c/5KLdqnf2',
   'Yin':                 'https://trello.com/c/SzRLulRa',
@@ -311,6 +313,7 @@ const TECHNIQUE_URLS = {
   'Sea King':            'https://trello.com/c/2Fno18Wx',
   'Ink':                 'https://trello.com/c/KMfAFUTW',
   'Power Of Friendship': 'https://trello.com/c/SSFlp6Xa',
+  'No Enemies':          'https://trello.com/b/zbEwABkY/cursed-gear-official',
   'Madness Factor':      'https://trello.com/c/lyuAxecC',
   'Bounce':              'https://trello.com/c/XM3XXCa7',
   'Star Link':           'https://trello.com/c/4z5FKaAM',
@@ -402,13 +405,26 @@ const CT_STATS = [
 ];
 const CT_STAT_MAX = 10; // each stat caps at 10
 
-// 20 base + up to 5 drives (×4 pts each) = 40 max
-const BASE_CT_POINTS = 20;
+// 60 base + up to 5 drives (×4 pts each) = 80 max
+const BASE_CT_POINTS = 60;
 const MAX_DRIVES     = 5;
 const DRIVE_BONUS    = 4;
 
 function getCtPointsTotal() {
   return BASE_CT_POINTS + (state.memoryDrives || 0) * DRIVE_BONUS;
+}
+
+// Cost to go from level (lv-1) to level lv: 1 for lv1-2, 2 for lv3-4, 3 for lv5-6, etc.
+function ctLevelCost(lv) {
+  if (lv <= 0) return 0;
+  return Math.ceil(lv / 2);
+}
+
+// Total point cost to reach level lv from 0
+function ctTotalCost(lv) {
+  let cost = 0;
+  for (let i = 1; i <= lv; i++) cost += ctLevelCost(i);
+  return cost;
 }
 
 // Colour for trio cards based on individual level (0–10)
@@ -446,7 +462,7 @@ let state = {
   gear: null,
   clan: '',
   technique: null,
-  attrs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
+  attrs: { physicality:1, durability:1, output:1, efficiency:1, awareness:1, dexterity:1 },
   packs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
   dreams: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
   apCyberUpgrades: 0,
@@ -462,7 +478,8 @@ let state = {
 
 // Derived helpers
 function getPlayerLevel() {
-  return Object.values(state.attrs).reduce((a, b) => a + b, 0);
+  // Each attr starts at 1 (baseline), so level 1 = all at 1. Subtract the 5 extra baseline points.
+  return Object.values(state.attrs).reduce((a, b) => a + b, 0) - (ATTRIBUTES.length - 1);
 }
 
 function getMilestoneBonus() {
@@ -499,7 +516,8 @@ function getDreamPointsUsed() {
 }
 
 function getStatTotal(key) {
-  return (state.attrs[key] || 0) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
+  // Subtract 1 to normalise the baseline: attrs start at 1 visually but grade scaling is identical to the old 0-start behaviour.
+  return Math.max(0, (state.attrs[key] || 0) - 1) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
 }
 
 function getPlayerGradeData() {
@@ -535,8 +553,8 @@ function getGradedStat(key) {
 function getCyberneticLoadCap() {
   const g = getPlayerGradeData();
   if (!g) return null;
-  const nierBonus = state.clan === 'Nier|royal' ? 50 : 0;
-  return g.cyberLoad + nierBonus;
+  const nierMult = state.clan === 'Nier|royal' ? 1.2 : 1;
+  return Math.floor(g.cyberLoad * nierMult);
 }
 
 function getCyberneticLoadUsed() {
@@ -670,10 +688,9 @@ function buildAttrList() {
           <div class="attr-fill ${softCap ? 'above-cap' : ''}" id="fill-${attr.key}" style="width:${fillPct}%"></div>
           <div class="soft-cap-line" style="left:${softCapPct}%"></div>
         </div>
-        <input class="attr-input" type="number" min="0" max="${MAX_LEVEL}" value="${base}"
+        <input class="attr-input" type="number" min="1" max="${MAX_LEVEL}" value="${base}"
           id="inp-${attr.key}"
-          onchange="setAttr('${attr.key}',parseInt(this.value)||0)"
-          oninput="setAttr('${attr.key}',parseInt(this.value)||0)">
+          onchange="setAttr('${attr.key}',parseInt(this.value)||1)">
         <div class="attr-total">${total}</div>
         <div class="sp-btn-wrap">
           ${canRemovePack ? `<div class="sp-btn sp-minus" onclick="adjustPack('${attr.key}',-1)" title="Remove stat pack">−</div>` : ''}
@@ -733,10 +750,10 @@ function adjustCyberUpgrade(dir) {
 }
 
 function setAttr(key, val) {
-  val = Math.max(0, Math.min(MAX_LEVEL, val || 0));
+  val = Math.max(1, Math.min(MAX_LEVEL, val || 1));
   const otherSpent = getPlayerLevel() - (state.attrs[key]||0);
   if (otherSpent + val > MAX_LEVEL) val = MAX_LEVEL - otherSpent;
-  val = Math.max(0, val);
+  val = Math.max(1, val);
   state.attrs[key] = val;
   const inp = document.getElementById('inp-'+key);
   if (inp && parseInt(inp.value) !== val) inp.value = val;
@@ -753,7 +770,7 @@ function trackClick(e, key) {
   const bonus = getMilestoneBonus();
   const packPts = (state.packs[key] || 0) * PTS_PER_PACK;
   const dreamPts = state.dreams[key] || 0;
-  setAttr(key, Math.max(0, targetTotal - bonus - packPts - dreamPts));
+  setAttr(key, Math.max(1, targetTotal - bonus - packPts - dreamPts));
 }
 
 function updateBudget() {
@@ -845,7 +862,7 @@ function buildCyberneticsTab() {
 
 function cycleFinger() {
   if (!state.relics) state.relics = { fingerOfShiva: 0 };
-  state.relics.fingerOfShiva = (state.relics.fingerOfShiva + 1) % 4;
+  state.relics.fingerOfShiva = (state.relics.fingerOfShiva + 3) % 4;
   buildCyberneticsTab();
   buildAttrList();
   buildRadarChart();
@@ -1082,6 +1099,9 @@ function selectTech(name) {
     // Reset CT upgrades when switching technique
     state.ctLevels = { efficiency:0, potency:0, haste:0, evo:0 };
     state.memoryDrives = 0;
+    if (name === 'Divine Cultivation') {
+      showToast('Divine Cultivation currently does not have rebirth scaling, im working on it for 1.2', 6000);
+    }
   }
   buildTechGrid();
   buildCtUpgradePanel();
@@ -1098,7 +1118,7 @@ function filterTech(tier, btn) {
 // CT UPGRADE PANEL
 // ============================================================
 function getCtPointsSpent() {
-  return Object.values(state.ctLevels).reduce((sum, lv) => sum + lv, 0);
+  return Object.values(state.ctLevels).reduce((sum, lv) => sum + ctTotalCost(lv), 0);
 }
 
 function getCtPointsAvailable() {
@@ -1142,7 +1162,8 @@ function buildCtUpgradePanel() {
   ['efficiency','potency','haste'].forEach(key => {
     const s = CT_STATS.find(x => x.key === key);
     const lv = state.ctLevels[key] || 0;
-    const canUp = lv < CT_STAT_MAX && avail >= 1;
+    const nextCost = ctLevelCost(lv + 1);
+    const canUp = lv < CT_STAT_MAX && avail >= nextCost;
     const canDown = lv > 0;
     const col = trioColor(lv);
     const glow = trioGlow(lv);
@@ -1155,14 +1176,15 @@ function buildCtUpgradePanel() {
           <div class="ct-upgrade-level" style="color:${col}">${lv}</div>
           <div class="ct-upgrade-btn ${canUp?'':'disabled'}" onclick="${canUp?`ctAdjust('${key}',1)`:''}">&plus;</div>
         </div>
-        <div class="ct-upgrade-cost" style="color:${col}">${lv < CT_STAT_MAX ? lv+' / '+CT_STAT_MAX : 'MAX'}</div>
+        <div class="ct-upgrade-cost" style="color:${col}">${lv < CT_STAT_MAX ? `${lv} / ${CT_STAT_MAX} · next: ${nextCost}pt` : 'MAX'}</div>
       </div>`;
   });
 
   // EVO (only if technique has evos)
   if (maxEvo > 0) {
     const lv = Math.min(state.ctLevels.evo || 0, maxEvo);
-    const canUp = lv < maxEvo && avail >= 1;
+    const nextCost = ctLevelCost(lv + 1);
+    const canUp = lv < maxEvo && avail >= nextCost;
     const canDown = lv > 0;
     html += `
       <div class="ct-upgrade-card evo">
@@ -1172,7 +1194,7 @@ function buildCtUpgradePanel() {
           <div class="ct-upgrade-level">${lv}</div>
           <div class="ct-upgrade-btn ${canUp?'':'disabled'}" onclick="${canUp?`ctAdjust('evo',1)`:''}">&plus;</div>
         </div>
-        <div class="ct-upgrade-cost">${lv < maxEvo ? lv+' / '+maxEvo : 'MAX'}</div>
+        <div class="ct-upgrade-cost">${lv < maxEvo ? `${lv} / ${maxEvo} · next: ${nextCost}pt` : 'MAX'}</div>
       </div>`;
   }
 
@@ -1189,9 +1211,10 @@ function ctAdjust(key, dir) {
   const maxLv = key === 'evo'
     ? (TECHNIQUES.find(t => t.name === state.technique)?.evo || 0)
     : CT_STAT_MAX;
-  const newLv = (state.ctLevels[key] || 0) + dir;
+  const curLv = state.ctLevels[key] || 0;
+  const newLv = curLv + dir;
   if (newLv < 0 || newLv > maxLv) return;
-  if (dir > 0 && getCtPointsAvailable() < 1) return;
+  if (dir > 0 && getCtPointsAvailable() < ctLevelCost(newLv)) return;
   state.ctLevels[key] = newLv;
   buildCtUpgradePanel();
 }
@@ -1203,8 +1226,9 @@ function clampCtLevels() {
   while (spent > total) {
     for (const k of keys) {
       if (state.ctLevels[k] > 0 && spent > total) {
+        const cost = ctLevelCost(state.ctLevels[k]);
         state.ctLevels[k]--;
-        spent--;
+        spent -= cost;
       }
     }
   }
@@ -1321,7 +1345,7 @@ function resetBuild() {
   if (!confirm('Reset this build?')) return;
   state = {
     buildName:'', gear:null, clan:'', technique:null,
-    attrs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
+    attrs:{physicality:1,durability:1,output:1,efficiency:1,awareness:1,dexterity:1},
     packs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
     dreams:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
     apCyberUpgrades:0,
@@ -1395,22 +1419,24 @@ function importBuild() {
     buildCtUpgradePanel();
     updateBudget();
     updateCyberLoadDisplay();
-    const toast = document.getElementById('toast');
-    toast.textContent = 'Build Imported!';
-    toast.classList.add('show');
-    setTimeout(() => { toast.classList.remove('show'); toast.textContent = 'Link Copied!'; }, 2500);
+    showToast('Build Imported!', 2500);
   } catch(e) {
     alert('Invalid build code.');
   }
+}
+
+function showToast(msg, duration) {
+  const toast = document.getElementById('toast');
+  toast.textContent = msg;
+  toast.classList.add('show');
+  setTimeout(() => { toast.classList.remove('show'); toast.textContent = 'Link Copied!'; }, duration || 2500);
 }
 
 function shareBuild() {
   const code = btoa(JSON.stringify(buildPayload()));
   const url = location.href.split('#')[0] + '#' + code;
   navigator.clipboard.writeText(url).catch(()=>{});
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 2500);
+  showToast('Link Copied!', 2500);
 }
 
 function loadFromHash() {
@@ -1442,4 +1468,14 @@ function loadFromHash() {
   } catch(e) {}
 }
 
+function toggleLightMode() {
+  document.body.classList.toggle('light-mode');
+  const btn = document.getElementById('lightModeBtn');
+  if (btn) btn.textContent = document.body.classList.contains('light-mode') ? '◐' : '◑';
+  try { localStorage.setItem('cgbuilder_light', document.body.classList.contains('light-mode') ? '1' : ''); } catch(e) {}
+}
+
 init();
+
+// Restore light mode preference
+try { if (localStorage.getItem('cgbuilder_light')) { document.body.classList.add('light-mode'); const btn = document.getElementById('lightModeBtn'); if (btn) btn.textContent = '◐'; } } catch(e) {}
