@@ -679,7 +679,7 @@ select option { background: #161520; }
 
 .ct-upgrade-card {
   border: 1px solid var(--border);
-  padding: 10px;
+  padding: 10px 6px;
   text-align: center;
   cursor: default;
   position: relative;
@@ -713,9 +713,9 @@ select option { background: #161520; }
 .ct-upgrade-label {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  letter-spacing: 2px;
+  letter-spacing: 1px;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--text);
   margin-bottom: 6px;
 }
 
@@ -757,8 +757,8 @@ select option { background: #161520; }
 .ct-upgrade-cost {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 9px;
-  color: var(--text-dim);
-  letter-spacing: 1px;
+  color: var(--text);
+  letter-spacing: 0px;
   margin-top: 4px;
 }
 
