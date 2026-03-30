@@ -16,22 +16,21 @@ const ATTRIBUTES = [
   { key: 'dexterity',   name: 'Dexterity',   desc: 'Movement speed' },
 ];
 
-// Grade thresholds — same curve as in-game data, scaled so SS5 = exactly 600
-// Starts tight (F ~2pts/grade), gets progressively steeper through soft cap (~19pts/grade at SS)
+// Grade thresholds (official)
 const GRADE_THRESHOLDS = [
-    0,   2,   4,   5,   7,   // F1-F5
-    9,  11,  13,  14,  16,   // E1-E5
-   18,  21,  23,  26,  29,   // D1-D5
-   38,  41,  45,  49,  52,   // C1-C5
-   56,  61,  66,  72,  77,   // B1-B5
-   83,  90,  97, 104, 111,   // A1-A5  ── SOFT CAP ──
-  117, 126, 135, 144, 153,   // SF1-SF5
-  162, 172, 183, 194, 205,   // SE1-SE5
-  216, 228, 241, 253, 266,   // SD1-SD5
-  278, 293, 307, 322, 336,   // SC1-SC5
-  350, 366, 383, 399, 415,   // SB1-SB5
-  431, 449, 467, 485, 503,   // SA1-SA5
-  521, 541, 560, 580, 600,   // SS1-SS5
+    0,   2,   4,   6,   8,
+   10,  12,  14,  16,  18,
+   20,  23,  26,  29,  32,
+   35,  40,  45,  50,  55,
+   60,  66,  72,  78,  84,
+   90,  97, 104, 111, 118,
+  125, 133, 141, 149, 157,
+  165, 174, 183, 192, 201,
+  210, 220, 230, 240, 250,
+  260, 271, 282, 293, 304,
+  315, 327, 339, 351, 363,
+  375, 388, 401, 414, 427,
+  440, 552, 664, 776, 888,
 ];
 
 const GRADE_LETTERS = ['F','E','D','C','B','A','SF','SE','SD','SC','SB','SA','SS'];
