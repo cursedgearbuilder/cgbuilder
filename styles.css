@@ -26,7 +26,7 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'IBM Plex Mono', monospace;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 13px;
   min-height: 100vh;
   overflow-x: hidden;
@@ -80,15 +80,17 @@ body::after {
 /* ── HEADER ── */
 header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   padding: 14px 18px;
   margin-bottom: 12px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-left: 3px solid var(--accent);
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 header::before {
@@ -97,6 +99,8 @@ header::before {
   inset: 0;
   background: linear-gradient(90deg, var(--accent-glow) 0%, transparent 50%);
   pointer-events: none;
+  overflow: hidden;
+  border-radius: inherit;
 }
 
 .logo { display: flex; flex-direction: column; gap: 3px; position: relative; }
@@ -135,7 +139,7 @@ header::before {
 
 .logo-disclaimer {
   font-family: 'IBM Plex Mono', monospace;
-  font-weight: 400;
+  font-weight: 500;
   font-size: 9px;
   color: var(--text-muted);
   line-height: 1.6;
@@ -401,7 +405,7 @@ select option { background: #161520; }
 
 /* ── RADAR CHART ── */
 .radar-wrap { display: flex; justify-content: center; margin-bottom: 10px; }
-#radarSvg { display: block; width: 220px; height: 220px; }
+#radarSvg { display: block; width: 240px; height: 255px; }
 
 /* ── ATTRIBUTES ── */
 .attr-list { display: flex; flex-direction: column; gap: 5px; }
@@ -1252,3 +1256,138 @@ select option { background: #161520; }
   .main-grid { grid-template-columns: 1fr; }
   .summary-grid { grid-template-columns: 1fr; }
 }
+
+/* ── MOBILE ── */
+@media (max-width: 640px) {
+  body { font-size: 12px; }
+
+  .app { padding: 0 8px 32px; }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 12px 14px;
+  }
+
+  .logo { width: 100%; }
+
+  .logo-title { font-size: 16px; letter-spacing: 3px; }
+
+  .logo-disclaimer { max-width: 100%; font-size: 8px; }
+
+  .header-right {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .header-links {
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .header-link {
+    padding: 7px 10px;
+    font-size: 9px;
+    min-height: 36px;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .header-actions {
+    flex-wrap: wrap;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .btn {
+    padding: 8px 12px;
+    font-size: 9px;
+    min-height: 36px;
+    letter-spacing: 1px;
+    flex: 1 1 auto;
+    justify-content: center;
+  }
+
+  .attr-input {
+    width: 44px;
+    font-size: 12px;
+    padding: 3px 4px;
+    height: 32px;
+  }
+
+  .attr-row { gap: 6px; }
+
+  .sp-btn { width: 26px; height: 26px; font-size: 9px; }
+
+  .tabs { flex-wrap: wrap; }
+  .tab { font-size: 10px; padding: 8px 12px; }
+
+  .tech-card, .cyber-card, .gear-card { padding: 10px; }
+
+  .panel-body { padding: 10px; }
+
+  .identity-grid { gap: 10px; }
+
+  select, input[type="text"] { font-size: 12px; min-height: 36px; }
+}
+
+/* ── LIGHT MODE ── */
+body.light-mode {
+  --bg:            #eeeae0;
+  --bg2:           #e5e0d4;
+  --surface:       #f8f5ee;
+  --surface2:      #eeeade;
+  --border:        #ccc5b0;
+  --border-bright: #b0a888;
+  --accent:        #5c3e00;
+  --accent-dim:    #7a5510;
+  --accent-glow:   rgba(92,62,0,0.08);
+  --accent2:       #580090;
+  --accent3:       #0050bb;
+  --accent-red:    #aa1010;
+  --text:          #111008;
+  --text-dim:      #3a2e18;
+  --text-muted:    #706550;
+  --royal:         #5c3e00;
+  --unique:        #580090;
+  --rare:          #0050bb;
+  --common:        #484840;
+}
+
+body.light-mode { background-image: repeating-linear-gradient(0deg, transparent, transparent 31px, rgba(92,62,0,0.04) 31px, rgba(92,62,0,0.04) 32px); }
+
+body.light-mode::after { background: repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.02) 2px); }
+
+body.light-mode header::before { background: linear-gradient(90deg, rgba(92,62,0,0.06) 0%, transparent 50%); }
+
+body.light-mode .btn-primary { background: #5c3e00; border-color: #5c3e00; color: #f8f5ee; }
+body.light-mode .btn-primary:hover { background: #7a5510; border-color: #7a5510; }
+
+/* In light mode the tier colours used inline (TIER_COLORS in JS) are dark-mode neons.
+   We remap them via CSS filter tricks where possible, but mainly override card text. */
+body.light-mode .tech-name,
+body.light-mode .cyber-name { filter: brightness(0.45) saturate(1.4); }
+
+body.light-mode .tech-tier-label,
+body.light-mode .cyber-type-badge { filter: brightness(0.45) saturate(1.4); }
+
+body.light-mode .tier-stripe { filter: brightness(0.7); }
+
+body.light-mode .trello-link { filter: brightness(0.55); }
+
+body.light-mode .ct-upgrade-label { filter: brightness(0.45) saturate(1.4); }
+body.light-mode .ct-upgrade-level { filter: brightness(0.45) saturate(1.4); }
+body.light-mode .ct-upgrade-cost  { filter: brightness(0.45) saturate(1.4); }
+
+body.light-mode .grade-SS,
+body.light-mode .grade-S,
+body.light-mode .grade-A,
+body.light-mode .grade-B,
+body.light-mode .grade-C,
+body.light-mode .grade-D,
+body.light-mode .grade-E,
+body.light-mode .grade-F { filter: brightness(0.5) saturate(1.3); }
+
+.btn-icon { padding: 7px 10px; font-size: 14px; line-height: 1; }

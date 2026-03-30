@@ -901,9 +901,10 @@ function setCyberLoad(id, val) {
 function setCyberBonus(id, attr, val) {
   const entry = state.cybernetics.find(c => c.id === id);
   if (!entry) return;
-  entry.bonuses[attr] = parseInt(val) || 0;
-  // Auto-recalculate load: base + floor(bonus/10)*5 for each positive bonus
   const base = CYBERNETICS.find(c => c.id === id);
+  if (base && base.load === 0) return;
+  entry.bonuses[attr] = Math.max(-30, Math.min(30, parseInt(val) || 0));
+  // Auto-recalculate load: base + floor(bonus/10)*5 for each positive bonus
   const extraLoad = ATTRIBUTES.reduce((sum, a) => {
     const b = entry.bonuses[a.key] || 0;
     return sum + (b > 0 ? Math.floor(b / 10) * 5 : 0);
@@ -929,12 +930,12 @@ function buildEquippedCybernetics() {
     const base = CYBERNETICS.find(c => c.id === entry.id);
     if (!base) return '';
     const color = CYBER_TYPE_COLORS[base.type];
-    const bonusInputs = ATTRIBUTES.filter(a => a.key !== 'durability').map(a =>
+    const isZeroLoad = base.load === 0;
+    const bonusInputs = isZeroLoad ? '' : ATTRIBUTES.filter(a => a.key !== 'durability').map(a =>
       `<div class="cyber-bonus-field">
         <div class="cyber-bonus-label">${a.name.slice(0,3).toUpperCase()}</div>
-        <input class="cyber-bonus-input" type="number" value="${entry.bonuses[a.key]||0}"
-          onchange="setCyberBonus('${entry.id}','${a.key}',this.value)"
-          oninput="setCyberBonus('${entry.id}','${a.key}',this.value)">
+        <input class="cyber-bonus-input" type="number" min="-30" max="30" value="${entry.bonuses[a.key]||0}"
+          onchange="setCyberBonus('${entry.id}','${a.key}',this.value)">
       </div>`
     ).join('');
     return `
