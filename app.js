@@ -818,8 +818,7 @@ function buildCyberneticsTab() {
   const container = document.getElementById('cyberGrid');
   const filter = state.cyberFilter || 'all';
   const filtered = filter === 'all' ? CYBERNETICS : CYBERNETICS.filter(c => c.type === filter);
-  const fingers = state.relics?.fingerOfShiva || 0;
-  const hasRelic = fingers === 7;
+  const hasRelic = (state.relics?.fingerOfShiva || 0) >= 3;
 
   // Relic section — always shown at top
   let relicHtml = `
@@ -832,7 +831,6 @@ function buildCyberneticsTab() {
           <span class="cyber-type-badge" style="color:#e0c060">RELIC</span>
         </div>
         <div class="cyber-card-meta">
-          <span class="cyber-load-tag" style="color:#e0c060">${fingers} / 3 FINGERS</span>
           ${hasRelic ? `<span style="font-size:9px;color:#e0c060;font-weight:600">✦ +10% ALL ATTRS</span>` : ''}
         </div>
         <div class="cyber-desc">An incredibly rare item obtained from Cursed Caches or the Culling Games. Consuming all three fingers grants unique face markings and a permanent +10% buff to all attributes.</div>
@@ -862,7 +860,7 @@ function buildCyberneticsTab() {
 
 function cycleFinger() {
   if (!state.relics) state.relics = { fingerOfShiva: 0 };
-  state.relics.fingerOfShiva = (state.relics.fingerOfShiva + 3) % 4;
+  state.relics.fingerOfShiva = state.relics.fingerOfShiva >= 3 ? 0 : 3;
   buildCyberneticsTab();
   buildAttrList();
   buildRadarChart();
