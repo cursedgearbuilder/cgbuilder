@@ -478,8 +478,8 @@ function getAPMax() {
 }
 
 function getRelicMultiplier() {
-  // Buff only active when all 3 fingers are selected (bitmask 0b111 = 7)
-  return (state.relics?.fingerOfShiva || 0) === 7 ? 1.10 : 1.0;
+  // Buff only active when all 3 fingers are obtained
+  return (state.relics?.fingerOfShiva || 0) >= 3 ? 1.10 : 1.0;
 }
 
 function getPacksUsed() {
@@ -801,29 +801,22 @@ function buildCyberneticsTab() {
   const container = document.getElementById('cyberGrid');
   const filter = state.cyberFilter || 'all';
   const filtered = filter === 'all' ? CYBERNETICS : CYBERNETICS.filter(c => c.type === filter);
-  const fingerBits = state.relics?.fingerOfShiva || 0;
-  const fingerCount = [fingerBits & 1, (fingerBits >> 1) & 1, (fingerBits >> 2) & 1].reduce((a,b) => a+b, 0);
-  const hasRelic = fingerBits === 7;
+  const fingers = state.relics?.fingerOfShiva || 0;
+  const hasRelic = fingers === 7;
 
   // Relic section — always shown at top
   let relicHtml = `
     <div style="grid-column:1/-1;margin-bottom:4px">
       <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">RELICS</div>
-      <div class="cyber-card ${hasRelic ? 'selected' : ''}" style="border-color:${hasRelic ? '#e0c060' : 'var(--border)'}">
+      <div class="cyber-card ${hasRelic ? 'selected' : ''}" onclick="cycleFinger()" style="border-color:${hasRelic ? '#e0c060' : 'var(--border)'};cursor:pointer">
         <div class="tier-stripe" style="background:#e0c060"></div>
         <div class="cyber-card-header">
           <div class="cyber-name" style="color:#e0c060">Finger of Shiva</div>
           <span class="cyber-type-badge" style="color:#e0c060">RELIC</span>
         </div>
-        <div class="cyber-card-meta" style="display:flex;align-items:center;gap:8px">
-          <div style="display:flex;gap:4px">
-            ${[0,1,2].map(i => {
-              const isSelected = (fingerBits >> i) & 1;
-              return `<div onclick="toggleFingerBit(${i})" style="cursor:pointer;width:18px;height:18px;border-radius:50%;border:1px solid ${isSelected ? '#e0c060' : 'var(--border)'};background:${isSelected ? 'rgba(224,192,96,0.3)' : 'transparent'};display:flex;align-items:center;justify-content:center;font-size:9px;color:${isSelected ? '#e0c060' : 'var(--text-muted)'}; transition:all 0.15s">${i+1}</div>`;
-            }).join('')}
-          </div>
-          <span style="font-size:9px;color:var(--text-muted)">${fingerCount} / 3 fingers</span>
-          ${hasRelic ? `<span style="font-size:9px;color:#e0c060;font-weight:600">+10% ALL ATTRS</span>` : ''}
+        <div class="cyber-card-meta">
+          <span class="cyber-load-tag" style="color:#e0c060">${fingers} / 3 FINGERS</span>
+          ${hasRelic ? `<span style="font-size:9px;color:#e0c060;font-weight:600">✦ +10% ALL ATTRS</span>` : ''}
         </div>
         <div class="cyber-desc">An incredibly rare item obtained from Cursed Caches or the Culling Games. Consuming all three fingers grants unique face markings and a permanent +10% buff to all attributes.</div>
       </div>
@@ -850,9 +843,9 @@ function buildCyberneticsTab() {
   });
 }
 
-function toggleFingerBit(bitIndex) {
+function cycleFinger() {
   if (!state.relics) state.relics = { fingerOfShiva: 0 };
-  state.relics.fingerOfShiva ^= (1 << bitIndex); // Toggle the bit
+  state.relics.fingerOfShiva = (state.relics.fingerOfShiva + 1) % 4;
   buildCyberneticsTab();
   buildAttrList();
   buildRadarChart();
