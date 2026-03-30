@@ -136,6 +136,7 @@ const TECHNIQUES = [
   { name:'The Watcher',        tier:'unique', roll:0.83, evo:1 },
   { name:'Tremor',             tier:'unique', roll:0.83, evo:3 },
   { name:'Spirit Walker',      tier:'unique', roll:0.83, evo:1 },
+  { name:'Ink',                tier:'unique', roll:0.83, evo:3 },
   // Rare - 1.67%
   { name:'Beelzebub',          tier:'rare',   roll:1.67, evo:1 },
   { name:'Fresh Cut',          tier:'rare',   roll:1.67, evo:0 },
@@ -157,7 +158,6 @@ const TECHNIQUES = [
   { name:'Sun Breather',       tier:'common', roll:2.42, evo:0 },
   { name:'Shadow Realm',       tier:'common', roll:2.42, evo:0 },
   { name:'Sea King',           tier:'common', roll:2.42, evo:1 },
-  { name:'Ink',                tier:'unique', roll:0.83, evo:3 },
   { name:'Power Of Friendship',tier:'common', roll:2.42, evo:0 },
   { name:'Madness Factor',     tier:'common', roll:2.42, evo:0 },
   { name:'No Enemies',         tier:'common', roll:2.42, evo:0 },
@@ -457,6 +457,7 @@ let state = {
   playerGrade: '',
   cybernetics: [],
   cyberFilter: 'all',
+  relics: { fingerOfShiva: 0 },
 };
 
 // Derived helpers
@@ -470,6 +471,14 @@ function getMilestoneBonus() {
 
 function getAPEarned() {
   return Math.floor(getPlayerLevel() / 25);
+}
+
+function getAPMax() {
+  return Math.floor(MAX_LEVEL / 25); // 6 — max AP ever earnable
+}
+
+function getRelicMultiplier() {
+  return (state.relics?.fingerOfShiva || 0) >= 3 ? 1.10 : 1.0;
 }
 
 function getPacksUsed() {
@@ -501,10 +510,11 @@ function getStatBuff() {
   return g ? g.buff : 0;
 }
 
-// Base effective stat — attrs + milestone + packs + cybernetics, NO grade buff
+// Base effective stat — attrs + milestone + packs + cybernetics + relic, NO grade buff
 // Used for radar chart and grade letter so the visual doesn't inflate with grade
 function getEffectiveStat(key) {
-  return getStatTotal(key) + getCyberneticStatBonus(key);
+  const base = getStatTotal(key) + getCyberneticStatBonus(key);
+  return Math.floor(base * getRelicMultiplier());
 }
 
 // Returns true if the selected clan is royal
@@ -601,8 +611,13 @@ function buildRadarChart() {
     const x = cx + Math.cos(a.angle) * lr;
     const y = cy + Math.sin(a.angle) * lr;
     const grade = getGrade(a.val);
+    const gradedVal = getGradedStat(a.key);
+    const gradedGrade = gradedVal !== null ? getGrade(gradedVal) : null;
     html += `<text x="${x}" y="${y-5}" text-anchor="middle" fill="#3a3830" font-family="IBM Plex Mono,monospace" font-size="8" letter-spacing="1">${a.name.toUpperCase()}</text>`;
     html += `<text x="${x}" y="${y+7}" text-anchor="middle" fill="#c8a84a" font-family="IBM Plex Mono,monospace" font-size="10">${grade}</text>`;
+    if (gradedGrade) {
+      html += `<text x="${x}" y="${y+18}" text-anchor="middle" fill="rgba(200,168,74,0.55)" font-family="IBM Plex Mono,monospace" font-size="8">(${gradedGrade})</text>`;
+    }
   });
 
   svg.innerHTML = html;
@@ -614,7 +629,6 @@ function buildRadarChart() {
 function buildAttrList() {
   const container = document.getElementById('attrList');
   container.innerHTML = '';
-  const apAvail = getAPAvailable();
   const lvl = getPlayerLevel();
   const atMaxLevel = lvl >= MAX_LEVEL;
   const dreamsUsed = getDreamPointsUsed();
@@ -630,10 +644,8 @@ function buildAttrList() {
     const dreamPts = state.dreams[attr.key] || 0;
     const softCap = isAboveSoftCap(total);
     const softCapPct = GRADE_THRESHOLDS[SOFT_CAP_INDEX] / RADAR_SCALE * 100;
-    const canAddPack = apAvail > 0;
+    const canAddPack = getAPMax() - getAPUsed() > 0;
     const canRemovePack = (state.packs[attr.key] || 0) > 0;
-    const canAddDream = atMaxLevel && dreamsLeft > 0;
-    const canRemoveDream = dreamPts > 0;
 
     const graded = getGradedStat(attr.key);
     const gradedGrade = graded !== null ? getGrade(graded) : null;
@@ -666,8 +678,12 @@ function buildAttrList() {
           ${canRemovePack ? `<div class="sp-btn sp-minus" onclick="adjustPack('${attr.key}',-1)" title="Remove stat pack">−</div>` : ''}
           <div class="sp-btn ${canAddPack ? '' : 'disabled'}" onclick="${canAddPack ? `adjustPack('${attr.key}',1)` : ''}" title="${canAddPack ? 'Add stat pack (+'+PTS_PER_PACK+' pts)' : 'No AP left'}">SP</div>
           ${atMaxLevel ? `
-            ${canRemoveDream ? `<div class="sp-btn sp-minus" onclick="adjustDream('${attr.key}',-1)" title="Remove dream point" style="border-color:#b060e0;color:#b060e0">−</div>` : ''}
-            <div class="sp-btn ${canAddDream ? '' : 'disabled'}" onclick="${canAddDream ? `adjustDream('${attr.key}',1)` : ''}" title="${canAddDream ? 'Add dream point' : 'Dreams maxed'}" style="border-color:#b060e0;color:#b060e0;font-size:8px">DR</div>
+            <input type="number" min="0" max="${(state.dreams[attr.key]||0) + dreamsLeft}" value="${state.dreams[attr.key]||0}"
+              onchange="setDream('${attr.key}',parseInt(this.value)||0)"
+              oninput="setDream('${attr.key}',parseInt(this.value)||0)"
+              title="Dream points (${dreamsLeft} left)"
+              style="width:36px;text-align:center;border:1px solid #b060e0;background:transparent;color:#b060e0;font-family:'IBM Plex Mono',monospace;font-size:10px;border-radius:2px;padding:1px 2px">
+            <div class="sp-btn disabled" style="border-color:#b060e0;color:#b060e0;font-size:8px;cursor:default">DR</div>
           ` : ''}
         </div>
       </div>`;
@@ -678,7 +694,7 @@ function buildAttrList() {
 function adjustPack(key, dir) {
   const newVal = (state.packs[key] || 0) + dir;
   if (newVal < 0) return;
-  if (dir > 0 && getAPAvailable() <= 0) return;
+  if (dir > 0 && getAPMax() - getAPUsed() <= 0) return;
   state.packs[key] = newVal;
   buildAttrList();
   buildRadarChart();
@@ -695,10 +711,21 @@ function adjustDream(key, dir) {
   updateBudget();
 }
 
+function setDream(key, val) {
+  const current = state.dreams[key] || 0;
+  const used = getDreamPointsUsed();
+  const available = MAX_DREAM_POINTS - used + current;
+  val = Math.max(0, Math.min(available, val || 0));
+  state.dreams[key] = val;
+  buildAttrList();
+  buildRadarChart();
+  updateBudget();
+}
+
 function adjustCyberUpgrade(dir) {
   const newVal = (state.apCyberUpgrades || 0) + dir;
   if (newVal < 0) return;
-  if (dir > 0 && getAPAvailable() <= 0) return;
+  if (dir > 0 && getAPMax() - getAPUsed() <= 0) return;
   state.apCyberUpgrades = newVal;
   buildAttrList();
   updateBudget();
@@ -739,8 +766,9 @@ function updateBudget() {
   document.getElementById('gradeLabel').textContent = 'LVL ' + lvl;
 
   // AP budget row
+  const apMax = getAPMax();
   const apEl = document.getElementById('apCount');
-  if (apEl) apEl.textContent = `${apEarned} earned · ${packsUsed} SP · ${cyberUp} CU`;
+  if (apEl) apEl.textContent = `${apEarned} earned · ${packsUsed} SP · ${cyberUp} CU · ${apMax - getAPUsed()} left`;
 
   // Dream points row
   const dreamEl = document.getElementById('dreamCount');
@@ -772,7 +800,32 @@ function buildCyberneticsTab() {
   const container = document.getElementById('cyberGrid');
   const filter = state.cyberFilter || 'all';
   const filtered = filter === 'all' ? CYBERNETICS : CYBERNETICS.filter(c => c.type === filter);
-  container.innerHTML = '';
+  const fingers = state.relics?.fingerOfShiva || 0;
+  const hasRelic = fingers >= 3;
+
+  // Relic section — always shown at top
+  let relicHtml = `
+    <div style="grid-column:1/-1;margin-bottom:4px">
+      <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">RELICS</div>
+      <div class="cyber-card ${hasRelic ? 'selected' : ''}" onclick="toggleFinger()" style="border-color:${hasRelic ? '#e0c060' : 'var(--border)'}">
+        <div class="tier-stripe" style="background:#e0c060"></div>
+        <div class="cyber-card-header">
+          <div class="cyber-name" style="color:#e0c060">Finger of Shiva</div>
+          <span class="cyber-type-badge" style="color:#e0c060">RELIC</span>
+        </div>
+        <div class="cyber-card-meta" style="display:flex;align-items:center;gap:8px">
+          <div style="display:flex;gap:4px">
+            ${[1,2,3].map(i => `<div style="width:18px;height:18px;border-radius:50%;border:1px solid ${i <= fingers ? '#e0c060' : 'var(--border)'};background:${i <= fingers ? 'rgba(224,192,96,0.2)' : 'transparent'};display:flex;align-items:center;justify-content:center;font-size:9px;color:${i <= fingers ? '#e0c060' : 'var(--text-muted)'}">${i}</div>`).join('')}
+          </div>
+          <span style="font-size:9px;color:var(--text-muted)">${fingers} / 3 fingers</span>
+          ${hasRelic ? `<span style="font-size:9px;color:#e0c060;font-weight:600">+10% ALL ATTRS</span>` : ''}
+        </div>
+        <div class="cyber-desc">An incredibly rare item obtained from Cursed Caches or the Culling Games. Consuming all three fingers grants unique face markings and a permanent +10% buff to all attributes.</div>
+      </div>
+      <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);margin-top:12px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">CYBERNETICS</div>
+    </div>`;
+
+  container.innerHTML = relicHtml;
   filtered.forEach(c => {
     const equipped = state.cybernetics.find(e => e.id === c.id);
     const color = CYBER_TYPE_COLORS[c.type];
@@ -790,6 +843,14 @@ function buildCyberneticsTab() {
         <div class="cyber-desc">${c.desc}</div>
       </div>`;
   });
+}
+
+function toggleFinger() {
+  if (!state.relics) state.relics = { fingerOfShiva: 0 };
+  state.relics.fingerOfShiva = (state.relics.fingerOfShiva + 1) % 4;
+  buildCyberneticsTab();
+  buildAttrList();
+  buildRadarChart();
 }
 
 function filterCyber(type, btn) {
@@ -1269,6 +1330,7 @@ function resetBuild() {
     royalAttrBuff:'', techFilter:'all', memoryDrives:0,
     ctLevels:{efficiency:0,potency:0,haste:0,evo:0},
     playerGrade:'', cybernetics:[], cyberFilter:'all',
+    relics:{ fingerOfShiva:0 },
   };
   document.getElementById('buildName').value = '';
   document.getElementById('gearSelect').value = '';
@@ -1300,6 +1362,7 @@ function buildPayload() {
     ct: state.ctLevels,
     pg: state.playerGrade,
     cy: state.cybernetics,
+    rl: state.relics,
   };
 }
 
@@ -1326,6 +1389,7 @@ function importBuild() {
     if (d.ct) Object.keys(d.ct).forEach(k => { if (state.ctLevels[k] !== undefined) state.ctLevels[k] = d.ct[k]||0; });
     if (d.pg) { state.playerGrade = d.pg; document.getElementById('gradeSelect').value = d.pg; }
     if (d.cy) state.cybernetics = d.cy;
+    if (d.rl) state.relics = d.rl;
     buildGearGrid();
     buildAttrList();
     buildRadarChart();
@@ -1369,6 +1433,7 @@ function loadFromHash() {
     if (d.ct) Object.keys(d.ct).forEach(k => { state.ctLevels[k] = d.ct[k]||0; });
     if (d.pg) { state.playerGrade = d.pg; document.getElementById('gradeSelect').value = d.pg; }
     if (d.cy) state.cybernetics = d.cy;
+    if (d.rl) state.relics = d.rl;
     buildGearGrid();
     buildAttrList();
     buildRadarChart();
