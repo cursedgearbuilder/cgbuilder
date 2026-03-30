@@ -2,10 +2,10 @@
 // DATA
 // ============================================================
 const MAX_LEVEL = 150;          // Max player level
-const TOTAL_PACKS = 6;          // Stat packs earned (at levels 25,50,75,100,125,150)
 const PTS_PER_PACK = 25;        // Each stat pack = 25 pts into one attribute
 const MILESTONE_INTERVAL = 10;  // Every 10 levels, +1 to all stats
-const RADAR_SCALE = 150;        // Max value for radar chart display
+const RADAR_SCALE = 300;        // Max value for radar chart display
+const MAX_DREAM_POINTS = 100;   // Max total dream points (post-max-level)
 
 const ATTRIBUTES = [
   { key: 'physicality', name: 'Physicality', desc: 'M1 & M2 damage' },
@@ -16,24 +16,23 @@ const ATTRIBUTES = [
   { key: 'dexterity',   name: 'Dexterity',   desc: 'Movement speed' },
 ];
 
-// Grade thresholds: F through A (normal), then SF through SS (soft cap — diminishing returns)
-// Pre-soft-cap: F tier uses tighter spacing, then uniform 3pts per sub-grade
-// Soft cap: SF costs 15pts/level (5× normal), SE+ costs 6pts/level (2× normal)
-// Verified: 15pts=E1, 50pts=C3, 142pts=SF3, 167pts=SE1
+// Grade thresholds — reverse-engineered from real in-game data
+// Pre-soft-cap steps: F=2, E=2, D=3, C=4, B=6, A=8
+// Post-soft-cap steps: SF=10, SE=12, SD=14, SC=16, SB=18, SA=20, SS=22
 const GRADE_THRESHOLDS = [
-  0, 2, 4, 6, 9,           // F1-F5
-  14, 17, 20, 23, 26,      // E1-E5
-  29, 32, 35, 38, 41,      // D1-D5
-  44, 47, 50, 53, 56,      // C1-C5
-  59, 62, 65, 68, 71,      // B1-B5
-  74, 77, 80, 83, 86,      // A1-A5  ── SOFT CAP ──
-  101, 116, 131, 146, 161, // SF1-SF5  (15pts/level)
-  167, 173, 179, 185, 191, // SE1-SE5  (6pts/level)
-  197, 203, 209, 215, 221, // SD1-SD5  (6pts/level, estimated)
-  227, 233, 239, 245, 251, // SC1-SC5  (6pts/level, estimated)
-  257, 263, 269, 275, 281, // SB1-SB5  (6pts/level, estimated)
-  287, 293, 299, 305, 311, // SA1-SA5  (6pts/level, estimated)
-  317, 323, 329, 335, 341, // SS1-SS5  (6pts/level, estimated)
+  0,   2,   4,   6,   8,       // F1-F5   (step 2)
+  10,  12,  14,  16,  18,      // E1-E5   (step 2)
+  20,  23,  26,  29,  32,      // D1-D5   (step 3)
+  42,  46,  50,  54,  58,      // C1-C5   (step 4)
+  62,  68,  74,  80,  86,      // B1-B5   (step 6)
+  92, 100, 108, 116, 124,      // A1-A5   (step 8)  ── SOFT CAP ──
+  130, 140, 150, 160, 170,     // SF1-SF5 (step 10)
+  180, 192, 204, 216, 228,     // SE1-SE5 (step 12)
+  240, 254, 268, 282, 296,     // SD1-SD5 (step 14)
+  310, 326, 342, 358, 374,     // SC1-SC5 (step 16)
+  390, 408, 426, 444, 462,     // SB1-SB5 (step 18)
+  480, 500, 520, 540, 560,     // SA1-SA5 (step 20)
+  580, 602, 624, 646, 668,     // SS1-SS5 (step 22)
 ];
 
 const GRADE_LETTERS = ['F','E','D','C','B','A','SF','SE','SD','SC','SB','SA','SS'];
@@ -451,6 +450,8 @@ let state = {
   technique: null,
   attrs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
   packs: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
+  dreams: { physicality:0, durability:0, output:0, efficiency:0, awareness:0, dexterity:0 },
+  apCyberUpgrades: 0,
   royalAttrBuff: '',
   techFilter: 'all',
   memoryDrives: 0,
@@ -469,12 +470,28 @@ function getMilestoneBonus() {
   return Math.floor(getPlayerLevel() / MILESTONE_INTERVAL);
 }
 
+function getAPEarned() {
+  return Math.floor(getPlayerLevel() / 25);
+}
+
 function getPacksUsed() {
   return Object.values(state.packs).reduce((a, b) => a + b, 0);
 }
 
+function getAPUsed() {
+  return getPacksUsed() + (state.apCyberUpgrades || 0);
+}
+
+function getAPAvailable() {
+  return Math.max(0, getAPEarned() - getAPUsed());
+}
+
+function getDreamPointsUsed() {
+  return Object.values(state.dreams).reduce((a, b) => a + b, 0);
+}
+
 function getStatTotal(key) {
-  return (state.attrs[key] || 0) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK;
+  return (state.attrs[key] || 0) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
 }
 
 function getPlayerGradeData() {
@@ -599,14 +616,11 @@ function buildRadarChart() {
 function buildAttrList() {
   const container = document.getElementById('attrList');
   container.innerHTML = '';
-  const packsUsed = getPacksUsed();
-  const packsLeft = TOTAL_PACKS - packsUsed;
-
-  // Update pack count displays
-  const packBadge = document.getElementById('packBadge');
-  if (packBadge) packBadge.textContent = packsLeft + ' SP LEFT';
-  const packCount = document.getElementById('packCount');
-  if (packCount) packCount.textContent = packsUsed + ' / ' + TOTAL_PACKS;
+  const apAvail = getAPAvailable();
+  const lvl = getPlayerLevel();
+  const atMaxLevel = lvl >= MAX_LEVEL;
+  const dreamsUsed = getDreamPointsUsed();
+  const dreamsLeft = MAX_DREAM_POINTS - dreamsUsed;
 
   ATTRIBUTES.forEach(attr => {
     const total = getEffectiveStat(attr.key);
@@ -615,20 +629,27 @@ function buildAttrList() {
     const fillPct = Math.min(total / RADAR_SCALE * 100, 100);
     const base = state.attrs[attr.key] || 0;
     const packPts = (state.packs[attr.key] || 0) * PTS_PER_PACK;
+    const dreamPts = state.dreams[attr.key] || 0;
     const softCap = isAboveSoftCap(total);
     const softCapPct = GRADE_THRESHOLDS[SOFT_CAP_INDEX] / RADAR_SCALE * 100;
-    const canAddPack = packsLeft > 0;
+    const canAddPack = apAvail > 0;
     const canRemovePack = (state.packs[attr.key] || 0) > 0;
+    const canAddDream = atMaxLevel && dreamsLeft > 0;
+    const canRemoveDream = dreamPts > 0;
 
     const graded = getGradedStat(attr.key);
     const gradedGrade = graded !== null ? getGrade(graded) : null;
     const gradedGc    = gradedGrade ? gradeClass(gradedGrade) : '';
 
+    let bonusTags = '';
+    if (packPts > 0) bonusTags += `<div class="attr-pack-pts">+${packPts} SP</div>`;
+    if (dreamPts > 0) bonusTags += `<div class="attr-pack-pts" style="color:#b060e0">+${dreamPts} DR</div>`;
+
     container.innerHTML += `
       <div class="attr-row" title="${attr.desc}">
         <div class="attr-name-cell">
           <div class="attr-name">${attr.name}${softCap ? ' <span class="soft-cap-tag">S</span>' : ''}</div>
-          ${packPts > 0 ? `<div class="attr-pack-pts">+${packPts} SP</div>` : ''}
+          ${bonusTags}
           <div class="attr-grade-row">
             <span class="${gc}" style="font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:1px">${grade}</span>
             ${gradedGrade ? `<span class="attr-graded-grade ${gradedGc}">(${gradedGrade})</span>` : ''}
@@ -645,42 +666,44 @@ function buildAttrList() {
         <div class="attr-total">${total}</div>
         <div class="sp-btn-wrap">
           ${canRemovePack ? `<div class="sp-btn sp-minus" onclick="adjustPack('${attr.key}',-1)" title="Remove stat pack">−</div>` : ''}
-          <div class="sp-btn ${canAddPack ? '' : 'disabled'}" onclick="${canAddPack ? `adjustPack('${attr.key}',1)` : ''}" title="${canAddPack ? 'Add stat pack (+'+PTS_PER_PACK+' pts)' : 'No packs left'}">SP</div>
+          <div class="sp-btn ${canAddPack ? '' : 'disabled'}" onclick="${canAddPack ? `adjustPack('${attr.key}',1)` : ''}" title="${canAddPack ? 'Add stat pack (+'+PTS_PER_PACK+' pts)' : 'No AP left'}">SP</div>
+          ${atMaxLevel ? `
+            ${canRemoveDream ? `<div class="sp-btn sp-minus" onclick="adjustDream('${attr.key}',-1)" title="Remove dream point" style="border-color:#b060e0;color:#b060e0">−</div>` : ''}
+            <div class="sp-btn ${canAddDream ? '' : 'disabled'}" onclick="${canAddDream ? `adjustDream('${attr.key}',1)` : ''}" title="${canAddDream ? 'Add dream point' : 'Dreams maxed'}" style="border-color:#b060e0;color:#b060e0;font-size:8px">DR</div>
+          ` : ''}
         </div>
       </div>`;
   });
 }
 
-function buildStatPackPanel() {
-  const used = getPacksUsed();
-  const remaining = TOTAL_PACKS - used;
-  document.getElementById('packCount').textContent = remaining + ' / ' + TOTAL_PACKS;
-  const list = document.getElementById('packList');
-  let html = '';
-  ATTRIBUTES.forEach(attr => {
-    const packs = state.packs[attr.key] || 0;
-    const canAdd = remaining > 0;
-    const canRemove = packs > 0;
-    html += `
-      <div class="pack-row">
-        <span class="pack-attr-name">${attr.name}</span>
-        <div class="pack-controls">
-          <div class="ct-upgrade-btn ${canRemove?'':'disabled'}" onclick="${canRemove?`adjustPack('${attr.key}',-1)`:''}">&minus;</div>
-          <span class="pack-val">${packs > 0 ? packs + ' ('+packs*PTS_PER_PACK+')' : '0'}</span>
-          <div class="ct-upgrade-btn ${canAdd?'':'disabled'}" onclick="${canAdd?`adjustPack('${attr.key}',1)`:''}">&plus;</div>
-        </div>
-      </div>`;
-  });
-  list.innerHTML = html;
-}
 
 function adjustPack(key, dir) {
   const newVal = (state.packs[key] || 0) + dir;
   if (newVal < 0) return;
-  if (dir > 0 && getPacksUsed() >= TOTAL_PACKS) return;
+  if (dir > 0 && getAPAvailable() <= 0) return;
   state.packs[key] = newVal;
   buildAttrList();
   buildRadarChart();
+  updateBudget();
+}
+
+function adjustDream(key, dir) {
+  const newVal = (state.dreams[key] || 0) + dir;
+  if (newVal < 0) return;
+  if (dir > 0 && getDreamPointsUsed() >= MAX_DREAM_POINTS) return;
+  state.dreams[key] = newVal;
+  buildAttrList();
+  buildRadarChart();
+  updateBudget();
+}
+
+function adjustCyberUpgrade(dir) {
+  const newVal = (state.apCyberUpgrades || 0) + dir;
+  if (newVal < 0) return;
+  if (dir > 0 && getAPAvailable() <= 0) return;
+  state.apCyberUpgrades = newVal;
+  buildAttrList();
+  updateBudget();
 }
 
 function setAttr(key, val) {
@@ -703,14 +726,45 @@ function trackClick(e, key) {
   const targetTotal = Math.round(pct * RADAR_SCALE);
   const bonus = getMilestoneBonus();
   const packPts = (state.packs[key] || 0) * PTS_PER_PACK;
-  setAttr(key, Math.max(0, targetTotal - bonus - packPts));
+  const dreamPts = state.dreams[key] || 0;
+  setAttr(key, Math.max(0, targetTotal - bonus - packPts - dreamPts));
 }
 
 function updateBudget() {
   const lvl = getPlayerLevel();
+  const apEarned = getAPEarned();
+  const packsUsed = getPacksUsed();
+  const cyberUp = state.apCyberUpgrades || 0;
+  const dreamsUsed = getDreamPointsUsed();
   document.getElementById('budgetCount').textContent = lvl + ' / ' + MAX_LEVEL;
   document.getElementById('budgetFill').style.width = (lvl/MAX_LEVEL*100) + '%';
   document.getElementById('gradeLabel').textContent = 'LVL ' + lvl;
+
+  // AP budget row
+  const apEl = document.getElementById('apCount');
+  if (apEl) apEl.textContent = `${apEarned} earned · ${packsUsed} SP · ${cyberUp} CU`;
+
+  // Dream points row
+  const dreamEl = document.getElementById('dreamCount');
+  if (dreamEl) {
+    dreamEl.textContent = dreamsUsed + ' / ' + MAX_DREAM_POINTS;
+    const dreamRow = dreamEl.closest('.budget-bar');
+    if (dreamRow) dreamRow.style.display = lvl >= MAX_LEVEL ? '' : 'none';
+  }
+
+  // Cyber upgrade controls
+  const cuEl = document.getElementById('cyberUpgradeControls');
+  if (cuEl) {
+    const canUp = getAPAvailable() > 0;
+    const canDown = cyberUp > 0;
+    cuEl.innerHTML = `
+      <span class="budget-label">Cybernetic Upgrades</span>
+      <span class="budget-count" style="display:flex;align-items:center;gap:4px">
+        ${canDown ? `<span class="sp-btn sp-minus" onclick="adjustCyberUpgrade(-1)" style="font-size:10px;width:18px;height:18px;line-height:18px">−</span>` : ''}
+        <span>${cyberUp}</span>
+        ${canUp ? `<span class="sp-btn" onclick="adjustCyberUpgrade(1)" style="font-size:8px;width:18px;height:18px;line-height:18px">+</span>` : ''}
+      </span>`;
+  }
 }
 
 // ============================================================
@@ -1164,7 +1218,9 @@ function buildSummary() {
     <div class="summary-block">
       <div class="summary-block-title">Attributes</div>
       <div class="summary-row"><span class="summary-key">Player Level</span><span class="summary-val" style="color:var(--accent)">${lvl} / ${MAX_LEVEL}</span></div>
-      <div class="summary-row"><span class="summary-key">Stat Packs</span><span class="summary-val">${getPacksUsed()} / ${TOTAL_PACKS}</span></div>
+      <div class="summary-row"><span class="summary-key">Milestone Bonus</span><span class="summary-val">+${getMilestoneBonus()} to all</span></div>
+      <div class="summary-row"><span class="summary-key">AP Earned</span><span class="summary-val">${getAPEarned()} (${getPacksUsed()} SP + ${state.apCyberUpgrades||0} CU)</span></div>
+      ${getDreamPointsUsed() > 0 ? `<div class="summary-row"><span class="summary-key">Dream Points</span><span class="summary-val" style="color:#b060e0">${getDreamPointsUsed()} / ${MAX_DREAM_POINTS}</span></div>` : ''}
       <div style="margin-top:6px; border-top:1px solid var(--border); padding-top:6px"></div>
       ${ATTRIBUTES.map(a => {
         const total = getEffectiveStat(a.key);
@@ -1210,6 +1266,8 @@ function resetBuild() {
     buildName:'', gear:null, clan:'', technique:null,
     attrs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
     packs:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
+    dreams:{physicality:0,durability:0,output:0,efficiency:0,awareness:0,dexterity:0},
+    apCyberUpgrades:0,
     royalAttrBuff:'', techFilter:'all', memoryDrives:0,
     ctLevels:{efficiency:0,potency:0,haste:0,evo:0},
     playerGrade:'', cybernetics:[], cyberFilter:'all',
@@ -1237,6 +1295,8 @@ function buildPayload() {
     t: state.technique,
     a: state.attrs,
     sp: state.packs,
+    dr: state.dreams,
+    cu: state.apCyberUpgrades,
     ra: state.royalAttrBuff,
     md: state.memoryDrives,
     ct: state.ctLevels,
@@ -1261,6 +1321,8 @@ function importBuild() {
     if (d.t) state.technique = d.t;
     if (d.a) Object.keys(d.a).forEach(k => { if (state.attrs[k] !== undefined) state.attrs[k] = d.a[k]||0; });
     if (d.sp) Object.keys(d.sp).forEach(k => { if (state.packs[k] !== undefined) state.packs[k] = d.sp[k]||0; });
+    if (d.dr) Object.keys(d.dr).forEach(k => { if (state.dreams[k] !== undefined) state.dreams[k] = d.dr[k]||0; });
+    if (d.cu !== undefined) state.apCyberUpgrades = d.cu || 0;
     if (d.ra !== undefined) state.royalAttrBuff = d.ra;
     if (d.md !== undefined) state.memoryDrives = d.md;
     if (d.ct) Object.keys(d.ct).forEach(k => { if (state.ctLevels[k] !== undefined) state.ctLevels[k] = d.ct[k]||0; });
@@ -1302,6 +1364,8 @@ function loadFromHash() {
     if (d.t) state.technique = d.t;
     if (d.a) Object.keys(d.a).forEach(k => { state.attrs[k] = d.a[k]||0; });
     if (d.sp) Object.keys(d.sp).forEach(k => { state.packs[k] = d.sp[k]||0; });
+    if (d.dr) Object.keys(d.dr).forEach(k => { if (state.dreams[k] !== undefined) state.dreams[k] = d.dr[k]||0; });
+    if (d.cu !== undefined) state.apCyberUpgrades = d.cu || 0;
     if (d.ra !== undefined) state.royalAttrBuff = d.ra;
     if (d.md !== undefined) state.memoryDrives = d.md;
     if (d.ct) Object.keys(d.ct).forEach(k => { state.ctLevels[k] = d.ct[k]||0; });
