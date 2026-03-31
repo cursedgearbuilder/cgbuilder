@@ -239,7 +239,7 @@ const CYBERNETICS = [
   { id:'falcon_talons', name:'Falcon Talons',                    type:'Toolbar', load:35,  desc:'When activated, the user will perform a quick backflip before lunging forwards towards the opponent. Useful to avoid attacks before quickly closing the gap.' },
   { id:'pulse_gaunt',   name:'Pulse Gauntlets',                  type:'Toolbar', load:35,  desc:'When activated, increase both the damage and knockback of the next skill.' },
   { id:'output_200',    name:'200% Output',                      type:'Toolbar', load:25,  desc:'When activated, reduces all skill cooldowns by half for 10 seconds.' },
-  { id:'limitbreak',    name:'Limitbreak',                       type:'Toolbar', load:35,  desc:'When activated, the next skill used will deal twice as much damage.' },
+  { id:'limitbreak',    name:'Limitbreak',                       type:'Toolbar', load:25,  desc:'When activated, the next skill used will deal twice as much damage.' },
   // ── VOW ──
   { id:'show_hand',     name:'Show Hand',                        type:'Vow',     load:0,   desc:"The user can make a vow by chanting \"I vow to show my hand.\" and pressing E. This will reveal their stamina bar to opponents, but allow them to see their opponent's stamina in exchange." },
   { id:'embarrassment', name:'Embarassment',                     type:'Vow',     load:0,   desc:'The user can make a vow by chanting "I vow to teach you a lesson." and pressing E. This will lower the user\'s weapon damage to that of training weapons.' },
@@ -517,8 +517,7 @@ function getDreamPointsUsed() {
 }
 
 function getStatTotal(key) {
-  // Subtract 1 to normalise the baseline: attrs start at 1 visually but grade scaling is identical to the old 0-start behaviour.
-  return Math.max(0, (state.attrs[key] || 0) - 1) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
+  return (state.attrs[key] || 0) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
 }
 
 function getPlayerGradeData() {
