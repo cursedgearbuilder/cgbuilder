@@ -1100,6 +1100,9 @@ function selectTech(name) {
     if (name === 'Divine Cultivation') {
       showToast('Divine Cultivation currently does not have rebirth scaling, im working on it for 1.2', 6000);
     }
+    if (name === 'The Playbook') {
+      showToast('Seriously bro? 😭', 4000);
+    }
   }
   buildTechGrid();
   buildCtUpgradePanel();
