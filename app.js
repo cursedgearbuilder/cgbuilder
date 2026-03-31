@@ -1478,5 +1478,8 @@ function toggleLightMode() {
 
 init();
 
+// april fools
+document.addEventListener('click', () => document.querySelector('.app').classList.toggle('flipped'));
+
 // Restore light mode preference
 try { if (localStorage.getItem('cgbuilder_light')) { document.body.classList.add('light-mode'); const btn = document.getElementById('lightModeBtn'); if (btn) btn.textContent = '◐'; } } catch(e) {}
