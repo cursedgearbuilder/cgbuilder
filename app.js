@@ -180,7 +180,7 @@ const TECHNIQUES = [
   { name:'Wheres Your Head At',tier:'common', roll:2.42, evo:0 },
 ];
 
-const CYBER_TYPE_COLORS = { Active:'#c8a96e', Passive:'#4a9eff', Toolbar:'#b060e0', Vow:'#e05555' };
+const CYBER_TYPE_COLORS = { Active:'#c8a96e', Passive:'#4a9eff', Toolbar:'#b060e0', Vow:'#40b060' };
 
 const CYBERNETICS = [
   // ── ACTIVE ──
@@ -824,14 +824,14 @@ function buildCyberneticsTab() {
   let relicHtml = `
     <div style="grid-column:1/-1;margin-bottom:4px">
       <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">RELICS</div>
-      <div class="cyber-card ${hasRelic ? 'selected' : ''}" onclick="cycleFinger()" style="border-color:${hasRelic ? '#e0c060' : 'var(--border)'};cursor:pointer">
-        <div class="tier-stripe" style="background:#e0c060"></div>
+      <div class="cyber-card ${hasRelic ? 'selected' : ''}" onclick="cycleFinger()" style="border-color:${hasRelic ? '#e05040' : 'var(--border)'};cursor:pointer">
+        <div class="tier-stripe" style="background:#e05040"></div>
         <div class="cyber-card-header">
-          <div class="cyber-name" style="color:#e0c060">Finger of Shiva</div>
-          <span class="cyber-type-badge" style="color:#e0c060">RELIC</span>
+          <div class="cyber-name" style="color:#e05040">Finger of Shiva</div>
+          <span class="cyber-type-badge" style="color:#e05040">RELIC</span>
         </div>
         <div class="cyber-card-meta">
-          ${hasRelic ? `<span style="font-size:9px;color:#e0c060;font-weight:600">✦ +10% ALL ATTRS</span>` : ''}
+          ${hasRelic ? `<span style="font-size:9px;color:#e05040;font-weight:600">✦ +10% ALL ATTRS</span>` : ''}
         </div>
         <div class="cyber-desc">An incredibly rare item obtained from Cursed Caches or the Culling Games. Consuming all three fingers grants unique face markings and a permanent +10% buff to all attributes.</div>
       </div>
