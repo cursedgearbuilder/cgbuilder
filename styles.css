@@ -74,40 +74,8 @@ body::after {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 12px 40px;
-  transition: transform 0.4s ease;
 }
 
-.app.flipped { transform: rotate(180deg); }
-
-/* ── APRIL FOOLS NAIL ── */
-#nail {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10000;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
-  transition: filter 0.2s;
-}
-#nail:hover { filter: drop-shadow(0 2px 8px rgba(200,168,74,0.5)); }
-.nail-head {
-  width: 22px;
-  height: 10px;
-  background: linear-gradient(180deg, #c0b090, #807060);
-  border-radius: 3px 3px 1px 1px;
-}
-.nail-shaft {
-  width: 5px;
-  height: 24px;
-  background: linear-gradient(180deg, #909080, #505048);
-  border-radius: 0 0 2px 2px;
-}
-#nail.nailed .nail-head { background: linear-gradient(180deg, #e0d0a0, #a09070); }
-#nail.nailed .nail-shaft { height: 14px; }
 
 
 /* ── HEADER ── */

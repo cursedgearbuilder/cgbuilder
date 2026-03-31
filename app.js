@@ -1090,11 +1090,6 @@ function buildTechGrid() {
 }
 
 function selectTech(name) {
-  if (nailed) {
-    const card = [...document.querySelectorAll('.tech-card')].find(c => c.querySelector('.tech-name')?.textContent === name);
-    if (card) runAway(card);
-    return;
-  }
   if (state.technique === name) {
     state.technique = null;
   } else {
@@ -1483,30 +1478,6 @@ function toggleLightMode() {
 
 init();
 
-// april fools
-let nailed = false;
-
-function toggleNail() {
-  nailed = !nailed;
-  document.getElementById('nail').classList.toggle('nailed', nailed);
-}
-
-function runAway(el) {
-  const dx = (Math.random() - 0.5) * 400;
-  const dy = (Math.random() - 0.5) * 400;
-  const rot = (Math.random() - 0.5) * 60;
-  el.style.transition = 'transform 0.25s ease';
-  el.style.transform = `translate(${dx}px,${dy}px) rotate(${rot}deg)`;
-  setTimeout(() => {
-    el.style.transform = '';
-    setTimeout(() => { el.style.transition = ''; }, 250);
-  }, 350);
-}
-
-document.addEventListener('click', (e) => {
-  if (e.target.closest('#nail')) return;
-  if (!nailed) document.querySelector('.app').classList.toggle('flipped');
-});
 
 // Restore light mode preference
 try { if (localStorage.getItem('cgbuilder_light')) { document.body.classList.add('light-mode'); const btn = document.getElementById('lightModeBtn'); if (btn) btn.textContent = '◐'; } } catch(e) {}
