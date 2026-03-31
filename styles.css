@@ -316,7 +316,7 @@ select:focus, input[type="text"]:focus {
   border-color: var(--accent-dim);
   border-bottom-color: var(--accent);
 }
-select option { background: #161520; }
+select option { background: var(--surface2); color: var(--text); }
 
 /* ── CLAN BADGE ── */
 .clan-preview {
@@ -1370,6 +1370,12 @@ body.light-mode header::before { background: linear-gradient(90deg, rgba(92,62,0
 
 body.light-mode .btn-primary { background: #5c3e00; border-color: #5c3e00; color: #f8f5ee; }
 body.light-mode .btn-primary:hover { background: #7a5510; border-color: #7a5510; }
+
+body.light-mode select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%235c3e00'/%3E%3C/svg%3E");
+}
+body.light-mode select option { background: #f8f5ee; color: #111008; }
+body.light-mode select optgroup { background: #eeeade; color: #3a2e18; }
 
 /* In light mode the tier colours used inline (TIER_COLORS in JS) are dark-mode neons.
    We remap them via CSS filter tricks where possible, but mainly override card text. */
