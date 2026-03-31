@@ -1489,7 +1489,6 @@ let nailed = false;
 function toggleNail() {
   nailed = !nailed;
   document.getElementById('nail').classList.toggle('nailed', nailed);
-  showToast(nailed ? '📌 painting stabilised' : '💀 good luck', 2500);
 }
 
 function runAway(el) {
