@@ -471,6 +471,12 @@ select option { background: #161520; }
 
 .attr-input:focus { border-color: var(--accent-dim); }
 
+/* Hide number spinners — Chrome/Safari */
+.attr-input::-webkit-inner-spin-button,
+.attr-input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+/* Firefox */
+.attr-input { -moz-appearance: textfield; appearance: textfield; }
+
 /* SP buttons inline in attr rows */
 .sp-btn-wrap {
   display: flex;
