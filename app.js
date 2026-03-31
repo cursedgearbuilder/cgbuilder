@@ -943,12 +943,11 @@ function buildEquippedCybernetics() {
           <div class="equipped-cyber-type" style="color:${color}">${base.type}</div>
           <div class="equipped-cyber-remove" onclick="toggleCybernetic('${entry.id}')">✕</div>
         </div>
-        <div class="equipped-cyber-load-row">
+        ${isZeroLoad ? '' : `<div class="equipped-cyber-load-row">
           <span class="cyber-load-label">Load</span>
           <input class="cyber-load-input" type="number" min="0" value="${entry.load}"
-            onchange="setCyberLoad('${entry.id}',this.value)"
-            oninput="setCyberLoad('${entry.id}',this.value)">
-        </div>
+            onchange="setCyberLoad('${entry.id}',this.value)">
+        </div>`}
         <div class="cyber-bonus-grid">${bonusInputs}</div>
       </div>`;
   }).join('');
