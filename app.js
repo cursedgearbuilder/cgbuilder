@@ -73,7 +73,7 @@ const GEARS = [
 ];
 
 const CLAN_DATA = {
-  'Gojo|royal':      { tier:'royal',  desc:'Start with 5 CT points. Increased Technique Energy and regeneration.' },
+  'Gojo|royal':      { tier:'royal',  desc:'Start with 5 bonus CT points. Increased Technique Energy and regeneration.' },
   'Kamo|royal':      { tier:'royal',  desc:'M1 attacks grant lifesteal — 0.03% (0.5x with sword) max HP per hit.' },
   'Nier|royal':      { tier:'royal',  desc:'1.2x Cybernetic Load Cap. Auto-upgrade all equipped Cybernetics.' },
   'Zenin|royal':     { tier:'royal',  desc:'+8% damage vs non-royal clans. -3% vs royals. Innate Flicker Image.' },
@@ -411,7 +411,8 @@ const MAX_DRIVES     = 5;
 const DRIVE_BONUS    = 4;
 
 function getCtPointsTotal() {
-  return BASE_CT_POINTS + (state.memoryDrives || 0) * DRIVE_BONUS;
+  const gojoBonus = state.clan === 'Gojo|royal' ? 5 : 0;
+  return BASE_CT_POINTS + (state.memoryDrives || 0) * DRIVE_BONUS + gojoBonus;
 }
 
 // Cost to go from level (lv-1) to level lv: 1 for lv1-2, 2 for lv3-4, 3 for lv5-6, etc.
