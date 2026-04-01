@@ -198,8 +198,8 @@
       <div class="panel" style="margin-bottom:16px">
         <div class="panel-header">
           <span class="panel-title">Attributes</span>
-          <div style="display:flex;gap:6px;align-items:center">             
-            <span class="panel-badge" id="gradeLabel">LVL 0</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button class="btn" style="font-size:8px;padding:4px 10px;letter-spacing:1.5px" onclick="openInvestReset()" title="Investment Reset Item Mode">↺ Investment Reset Mode</button>
           </div>
         </div>
         <div class="panel-body">
@@ -211,10 +211,10 @@
         </div>
         <div class="budget-track"><div class="budget-fill" id="budgetFill" style="width:0%"></div></div>
         <div class="budget-bar">
-          <span class="budget-label">Player Level</span>
+          <span class="budget-label" id="budgetLabel">Player Level</span>
           <span class="budget-count" id="budgetCount">0 / 150</span>
         </div>
-        <div class="budget-bar" style="border-top:none;padding-top:0">
+        <div class="budget-bar" style="border-top:none;padding-top:0" id="apRow">
           <span class="budget-label">AP Points</span>
           <span class="budget-count" id="apCount">0 earned · 0 SP · 0 CU</span>
         </div>
@@ -222,7 +222,7 @@
           <span class="budget-label">Cybernetic Upgrades</span>
           <span class="budget-count">0</span>
         </div>
-        <div class="budget-bar" style="border-top:none;padding-top:0;display:none">
+        <div class="budget-bar" style="border-top:none;padding-top:0;display:none" id="dreamRow">
           <span class="budget-label" style="color:#b060e0">Dream Points</span>
           <span class="budget-count" id="dreamCount" style="color:#b060e0">0 / 100</span>
         </div>
@@ -308,5 +308,6 @@
   CONTACT &nbsp;·&nbsp; <a href="mailto:cursedgearbuilder@gmail.com" style="color:var(--text-muted);text-decoration:none">cursedgearbuilder@gmail.com</a>
 </footer>
 <script src="app.js"></script>
+
 </body>
 </html>

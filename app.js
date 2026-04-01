@@ -2,6 +2,7 @@
 // DATA
 // ============================================================
 const MAX_LEVEL = 150;          // Max player level
+const IR_BUDGET = 600;          // Total invest points in Investment Reset mode
 const PTS_PER_PACK = 25;        // Each stat pack = 25 pts into one attribute
 const MILESTONE_INTERVAL = 10;  // Every 10 levels, +1 to all stats
 const RADAR_SCALE = 300;        // Max value for radar chart display
@@ -482,6 +483,7 @@ let state = {
   cybernetics: [],
   cyberFilter: 'all',
   relics: { fingerOfShiva: 0 },
+  investResetMode: false,
 };
 
 // Derived helpers
@@ -699,6 +701,7 @@ function buildAttrList() {
           id="inp-${attr.key}"
           onchange="setAttr('${attr.key}',parseInt(this.value)||1)">
         <div class="attr-total">${total}</div>
+        ${state.investResetMode ? '' : `
         <div class="sp-btn-wrap">
           ${canRemovePack ? `<div class="sp-btn sp-minus" onclick="adjustPack('${attr.key}',-1)" title="Remove stat pack">−</div>` : ''}
           <div class="sp-btn ${canAddPack ? '' : 'disabled'}" onclick="${canAddPack ? `adjustPack('${attr.key}',1)` : ''}" title="${canAddPack ? 'Add stat pack (+'+PTS_PER_PACK+' pts)' : 'No AP left'}">SP</div>
@@ -710,7 +713,7 @@ function buildAttrList() {
               style="width:36px;text-align:center;border:1px solid #b060e0;background:transparent;color:#b060e0;font-family:'IBM Plex Mono',monospace;font-size:10px;border-radius:2px;padding:1px 2px">
             <div class="sp-btn disabled" style="border-color:#b060e0;color:#b060e0;font-size:8px;cursor:default">DR</div>
           ` : ''}
-        </div>
+        </div>`}
       </div>`;
   });
 }
@@ -757,9 +760,11 @@ function adjustCyberUpgrade(dir) {
 }
 
 function setAttr(key, val) {
-  val = Math.max(1, Math.min(MAX_LEVEL, val || 1));
+  const budget = state.investResetMode ? IR_BUDGET : MAX_LEVEL;
+  const perStatCap = state.investResetMode ? IR_BUDGET : MAX_LEVEL;
+  val = Math.max(1, Math.min(perStatCap, val || 1));
   const otherSpent = getPlayerLevel() - (state.attrs[key]||0);
-  if (otherSpent + val > MAX_LEVEL) val = MAX_LEVEL - otherSpent;
+  if (otherSpent + val > budget) val = budget - otherSpent;
   val = Math.max(1, val);
   state.attrs[key] = val;
   const inp = document.getElementById('inp-'+key);
@@ -786,26 +791,31 @@ function updateBudget() {
   const packsUsed = getPacksUsed();
   const cyberUp = state.apCyberUpgrades || 0;
   const dreamsUsed = getDreamPointsUsed();
-  document.getElementById('budgetCount').textContent = lvl + ' / ' + MAX_LEVEL;
-  document.getElementById('budgetFill').style.width = (lvl/MAX_LEVEL*100) + '%';
-  document.getElementById('gradeLabel').textContent = 'LVL ' + lvl;
+  const ir = state.investResetMode;
+  const budget = ir ? IR_BUDGET : MAX_LEVEL;
+  document.getElementById('budgetCount').textContent = lvl + ' / ' + budget;
+  document.getElementById('budgetFill').style.width = (lvl/budget*100) + '%';
+  const labelEl = document.getElementById('budgetLabel');
+  if (labelEl) labelEl.textContent = ir ? 'Points' : 'Player Level';
+
+  // AP and dream rows — hidden in invest reset mode
+  const apRow = document.getElementById('apRow');
+  if (apRow) apRow.style.display = ir ? 'none' : '';
+  const dreamRow = document.getElementById('dreamRow');
+  if (dreamRow) dreamRow.style.display = (!ir && lvl >= MAX_LEVEL) ? '' : 'none';
 
   // AP budget row
   const apMax = getAPMax();
   const apEl = document.getElementById('apCount');
   if (apEl) apEl.textContent = `${apEarned} earned · ${packsUsed} SP · ${cyberUp} CU · ${apMax - getAPUsed()} left`;
 
-  // Dream points row
+  // Dream points
   const dreamEl = document.getElementById('dreamCount');
-  if (dreamEl) {
-    dreamEl.textContent = dreamsUsed + ' / ' + MAX_DREAM_POINTS;
-    const dreamRow = dreamEl.closest('.budget-bar');
-    if (dreamRow) dreamRow.style.display = lvl >= MAX_LEVEL ? '' : 'none';
-  }
+  if (dreamEl) dreamEl.textContent = dreamsUsed + ' / ' + MAX_DREAM_POINTS;
 
-  // Cyber upgrade controls
+  // Cyber upgrade controls — hidden in invest reset mode
   const cuEl = document.getElementById('cyberUpgradeControls');
-  if (cuEl) {
+  if (cuEl) { cuEl.style.display = ir ? 'none' : '';
     const canUp = getAPAvailable() > 0;
     const canDown = cyberUp > 0;
     cuEl.innerHTML = `
@@ -1382,6 +1392,26 @@ function resetBuild() {
   buildRadarChart();
   buildTechGrid();
   buildCtUpgradePanel();
+  updateBudget();
+}
+
+// ============================================================
+// INVESTMENT RESET TOGGLE
+// ============================================================
+function openInvestReset() {
+  state.investResetMode = !state.investResetMode;
+  const btn = document.querySelector('[onclick="openInvestReset()"]');
+  if (state.investResetMode) {
+    // Zero out packs and dreams, reset attrs to baseline 1, give 600-point budget
+    ATTRIBUTES.forEach(a => { state.packs[a.key] = 0; state.dreams[a.key] = 0; state.attrs[a.key] = 1; });
+    if (btn) btn.style.color = 'var(--accent)';
+    if (btn) btn.style.borderColor = 'var(--accent)';
+  } else {
+    if (btn) btn.style.color = '';
+    if (btn) btn.style.borderColor = '';
+  }
+  buildAttrList();
+  buildRadarChart();
   updateBudget();
 }
 
