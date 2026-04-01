@@ -391,6 +391,13 @@ const CYBERNETIC_URLS = {
   'embarrassment': 'https://trello.com/c/XTVyeTJC',
 };
 
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1,3),16);
+  const g = parseInt(hex.slice(3,5),16);
+  const b = parseInt(hex.slice(5,7),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+
 function trelloBtn(url) {
   if (!url) return '';
   return `<a class="trello-link" href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">↗ TRELLO</a>`;
@@ -599,14 +606,14 @@ function buildRadarChart() {
       const y = cy + Math.sin(a.angle) * r * scale;
       return `${x},${y}`;
     }).join(' ');
-    html += `<polygon points="${pts}" fill="none" stroke="rgba(200,168,74,${scale===1?0.18:0.07})" stroke-width="1"/>`;
+    html += `<polygon points="${pts}" fill="none" stroke="rgba(200,168,74,${scale===1?0.35:0.15})" stroke-width="${scale===1?1.5:1}"/>`;
   });
 
   // Axes
   attrs.forEach(a => {
     const x = cx + Math.cos(a.angle) * r;
     const y = cy + Math.sin(a.angle) * r;
-    html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(200,168,74,0.1)" stroke-width="1"/>`;
+    html += `<line x1="${cx}" y1="${cy}" x2="${x}" y2="${y}" stroke="rgba(200,168,74,0.2)" stroke-width="1.5"/>`;
   });
 
   // Data polygon
@@ -615,7 +622,7 @@ function buildRadarChart() {
     const y = cy + Math.sin(a.angle) * r * a.pct;
     return `${x},${y}`;
   }).join(' ');
-  html += `<polygon points="${dataPts}" fill="rgba(200,168,74,0.1)" stroke="#c8a84a" stroke-width="1.5"/>`;
+  html += `<polygon points="${dataPts}" fill="rgba(200,168,74,0.12)" stroke="#c8a84a" stroke-width="2.5"/>`;
 
   // Data points
   attrs.forEach(a => {
@@ -824,8 +831,7 @@ function buildCyberneticsTab() {
   let relicHtml = `
     <div style="grid-column:1/-1;margin-bottom:4px">
       <div style="font-size:9px;letter-spacing:2px;color:var(--text-muted);margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)">RELICS</div>
-      <div class="cyber-card ${hasRelic ? 'selected' : ''}" onclick="cycleFinger()" style="border-color:${hasRelic ? '#e05040' : 'var(--border)'};cursor:pointer">
-        <div class="tier-stripe" style="background:#e05040"></div>
+      <div class="cyber-card ${hasRelic ? 'selected' : ''}" onclick="cycleFinger()" style="background:rgba(224,80,64,0.10);border-color:rgba(224,80,64,0.45);cursor:pointer">
         <div class="cyber-card-header">
           <div class="cyber-name" style="color:#e05040">Finger of Shiva</div>
           <span class="cyber-type-badge" style="color:#e05040">RELIC</span>
@@ -842,9 +848,10 @@ function buildCyberneticsTab() {
   filtered.forEach(c => {
     const equipped = state.cybernetics.find(e => e.id === c.id);
     const color = CYBER_TYPE_COLORS[c.type];
+    const bg = hexToRgba(color, 0.14);
+    const border = hexToRgba(color, 0.55);
     container.innerHTML += `
       <div class="cyber-card ${equipped ? 'selected' : ''}" onclick="toggleCybernetic('${c.id}')">
-        <div class="tier-stripe" style="background:${color}"></div>
         <div class="cyber-card-header">
           <div class="cyber-name">${c.name}</div>
           <span class="cyber-type-badge" style="color:${color}">${c.type.toUpperCase()}</span>
@@ -855,6 +862,9 @@ function buildCyberneticsTab() {
         </div>
         <div class="cyber-desc">${c.desc}</div>
       </div>`;
+    const el = container.lastElementChild;
+    el.style.background = bg;
+    el.style.borderColor = border;
   });
 }
 
@@ -1076,9 +1086,10 @@ function buildTechGrid() {
   filtered.forEach(t => {
     const sel = state.technique === t.name ? 'selected' : '';
     const color = TIER_COLORS[t.tier];
+    const bg = hexToRgba(color, 0.14);
+    const border = hexToRgba(color, 0.55);
     container.innerHTML += `
       <div class="tech-card ${sel}" onclick="selectTech('${t.name.replace(/'/g,"\\'")}')">
-        <div class="tier-stripe" style="background:${color}"></div>
         <div class="tech-name" style="color:${color}">${t.name}</div>
         <div class="tech-meta">
           <span class="tech-tier-label" style="color:${color}">${t.tier.toUpperCase()}</span>
@@ -1086,6 +1097,9 @@ function buildTechGrid() {
           ${trelloBtn(TECHNIQUE_URLS[t.name])}
         </div>
       </div>`;
+    const el = container.lastElementChild;
+    el.style.background = bg;
+    el.style.borderColor = border;
   });
 }
 
