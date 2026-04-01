@@ -524,7 +524,7 @@ function getDreamPointsUsed() {
 }
 
 function getStatTotal(key) {
-  return (state.attrs[key] || 0) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
+  return ((state.attrs[key] || 1) - 1) + getMilestoneBonus() + (state.packs[key] || 0) * PTS_PER_PACK + (state.dreams[key] || 0);
 }
 
 function getPlayerGradeData() {
